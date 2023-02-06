@@ -12,8 +12,9 @@ import '../../Utils/error_handles.dart';
 import '../Provider/user.dart';
 
 class LoginService {
-  Future loginService(BuildContext context, String? username, String? password) async{
-   try {
+  Future loginService(
+      BuildContext context, String? username, String? password) async {
+    try {
       http.Response res = await http.post(
         Uri.parse('${ApiURL.baseLink}/app/login'),
         body: jsonEncode({
@@ -29,8 +30,10 @@ class LoginService {
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
+          // ignore: use_build_context_synchronously
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
           await prefs.setString('token', jsonDecode(res.body)['token']);
+          // ignore: use_build_context_synchronously
           Navigator.pushNamedAndRemoveUntil(
             context,
             RegistrationPage.routeName,
@@ -39,7 +42,7 @@ class LoginService {
         },
       );
     } catch (e) {
-     CustomSnackBars().showSnackBar(context, e.toString());
+      CustomSnackBars().showSnackBar(context, e.toString());
     }
   }
 }

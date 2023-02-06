@@ -32,9 +32,8 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: const FabricLagbe()
-
-        // Provider.of<UserProvider>(context, listen: false).user.token.isEmpty
+        home: const LoginPage()
+        //  Provider.of<UserProvider>(context, listen: false).user.token == null
         //     ? const LoginPage()
         //     : const RegistrationPage(),
         );
