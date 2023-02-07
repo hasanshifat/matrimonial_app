@@ -12,6 +12,7 @@ class ColorCodes {
 
 
 
+
   // {
   //     'title': 'image 1',
   //     'image': 'assets/images/image1.jpg',
