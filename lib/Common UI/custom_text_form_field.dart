@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final int maxLines;
+  final int maxLines, maxLength;
   final bool obscureText, isSuffixActive;
   final Widget? suffix;
+  final TextInputType keyboardType;
+  final TextInputAction textInputAction;
+  final String? Function(String?)? validator;
 
   const CustomTextField({
     Key? key,
@@ -14,7 +17,11 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.isSuffixActive = false,
     this.suffix,
+    this.keyboardType = TextInputType.text,
+    this.textInputAction = TextInputAction.none,
     this.maxLines = 1,
+    this.maxLength = 1,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -22,6 +29,9 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      maxLength: maxLength,
       decoration: InputDecoration(
           suffixIcon: isSuffixActive ? suffix : const SizedBox(),
           hintText: hintText,
@@ -35,15 +45,8 @@ class CustomTextField extends StatelessWidget {
               borderSide: const BorderSide(
                 color: Colors.black38,
               ))),
-      validator: (val) {
-        if (val == null || val.isEmpty) {
-          return 'Enter your $hintText';
-        }
-        return null;
-      },
+      validator: validator,
       maxLines: maxLines,
     );
   }
-
-
 }

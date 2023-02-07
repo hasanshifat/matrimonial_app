@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import 'package:matrimonial_app/Login/Provider/user.dart';
-import 'package:matrimonial_app/SignUp/Pages/registration_page.dart';
-import 'package:matrimonial_app/fabric_lagbe.dart';
 import 'package:provider/provider.dart';
 
 import 'Utils/page_router.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:matrimonial_app/Utils/color_codes.dart';
 
 class SubmitButton extends StatelessWidget {
   final String? text;
@@ -51,7 +50,7 @@ class SubmitButton extends StatelessWidget {
                   // ColorCodes.seconderyStrongPink,
                   // ColorCodes.primaryPink,
                 ],
-                stops: [0.5, 1.0],
+                stops:const [0.5, 1.0],
               ),
               borderRadius: BorderRadius.circular(buttonRadius!),
             ),

@@ -25,7 +25,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final userdata = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
-        title: Text('data'),
+        title: const Text('data'),
       ),
       body: SafeArea(
           child: Center(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Common%20UI/loading_diaalogs.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/SignUp/Pages/registration_page.dart';
 import 'package:matrimonial_app/Utils/color_codes.dart';
+import 'package:matrimonial_app/Utils/snackbars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Common UI/custom_text_form_field.dart';
@@ -42,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     prefs = await SharedPreferences.getInstance();
     setState(() {
       bool? val = prefs.getBool('isCheked');
-      isChecked = val!;
+      isChecked = val ?? false;
     });
     if (isChecked) {
       setState(() {
@@ -84,9 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'বিডি',
-                    style: TextStyle(
+                    style: GoogleFonts.anekBangla(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
@@ -113,14 +115,36 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               CustomTextField(
                                 controller: _emailController,
-                                hintText: 'Username',
+                                hintText: 'মোবাইল নম্বর',
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                maxLength: 11,
+                                validator: (val) {
+                                  if (val == null) {
+                                    return 'আপনার মোবাইল নম্বর দিন';
+                                  } else if (val.length < 6) {
+                                    return 'আপনি ভুল মোবাইল নম্বর দিয়েছেন';
+                                  }
+                                  return null;
+                                },
                               ),
                               const SizedBox(height: 10),
                               CustomTextField(
                                 controller: _passwordController,
-                                hintText: 'Password',
+                                hintText: 'পাসওয়ার্ড',
+                                keyboardType: TextInputType.visiblePassword,
+                                textInputAction: TextInputAction.done,
                                 obscureText: isPassShow,
                                 isSuffixActive: true,
+                                maxLength: 6,
+                                validator: (val) {
+                                  if (val == null) {
+                                    return 'আপনার পাসওয়ার্ড দিন';
+                                  } else if (val.length < 6) {
+                                    return 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে';
+                                  }
+                                  return null;
+                                },
                                 suffix: IconButton(
                                     onPressed: (() {
                                       setState(() {
@@ -129,8 +153,6 @@ class _LoginPageState extends State<LoginPage> {
                                         } else {
                                           isPassShow = true;
                                         }
-
-                                        print(isPassShow);
                                       });
                                     }),
                                     icon: isPassShow
@@ -144,7 +166,8 @@ class _LoginPageState extends State<LoginPage> {
                                     fillColor: MaterialStateProperty.all(
                                         ColorCodes.purpleBlue),
                                     value: isChecked,
-                                    shape: const CircleBorder(),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4)),
                                     onChanged: (bool? value) {
                                       setState(() {
                                         isChecked = value!;
@@ -152,20 +175,30 @@ class _LoginPageState extends State<LoginPage> {
                                       });
                                     },
                                   ),
-                                  const Text(
+                                  Text(
                                     'মনে রাখুন',
-                                    style: TextStyle(
+                                    style: GoogleFonts.anekBangla(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: ColorCodes.purpleBlue),
                                   ),
                                   const Spacer(),
-                                  const Text(
-                                    'পাসওয়ার্ড ভুলে গেছেন?',
-                                    style: TextStyle(
+                                  InkWell(
+                                    onTap: () => CustomSnackBars().showSnackBar(
+                                        context,
+                                        'Not working yet',
+                                        ColorCodes.softGreen),
+                                    child: Text(
+                                      'পাসওয়ার্ড ভুলে গেছেন?',
+                                      style: GoogleFonts.anekBangla(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
-                                        color: ColorCodes.seconderyStrongPink),
+                                        color: ColorCodes.seconderyStrongPink,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor:
+                                            ColorCodes.seconderyStrongPink,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -182,11 +215,28 @@ class _LoginPageState extends State<LoginPage> {
                                   width: double.infinity,
                                   fontWeight: FontWeight.w500,
                                   textColor: Colors.white,
-                                  textSize: 14,
+                                  textSize: 16,
                                   press: (() => {
                                         if (_loginFormKey.currentState!
                                             .validate())
                                           {login()}
+                                        // else if (_emailController.text.length <
+                                        //     11)
+                                        //   {
+                                        //     CustomSnackBars().showSnackBar(
+                                        //         context,
+                                        //         'আপনি ভুল মোবাইল নম্বর দিয়েছেন',
+                                        //         ColorCodes.softRed)
+                                        //   }
+                                        // else if (_passwordController
+                                        //         .text.length <
+                                        //     6)
+                                        //   {
+                                        //     CustomSnackBars().showSnackBar(
+                                        //         context,
+                                        //         'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে',
+                                        //         ColorCodes.softRed)
+                                        //   }
                                       })),
                               const SizedBox(
                                 height: 10,
@@ -203,9 +253,9 @@ class _LoginPageState extends State<LoginPage> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  const Text(
+                                  Text(
                                     'অথবা',
-                                    style: TextStyle(
+                                    style: GoogleFonts.anekBangla(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black87),
@@ -225,9 +275,9 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              const Text(
+                              Text(
                                 'অ্যাকাউন্ট নেই?',
-                                style: TextStyle(
+                                style: GoogleFonts.anekBangla(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black87),
@@ -273,10 +323,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future login() async {
-    CustomLoadingDialogs.circleProggressLoading(context);
+    CustomLoadingDialogs.circleProgressLoading(context);
     await loginService.loginService(
         context, _emailController.text, _passwordController.text);
 
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
   }
 }

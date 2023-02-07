@@ -16,6 +16,7 @@ class UserProvider extends ChangeNotifier {
     Map<String, dynamic> valueMap = json.decode(user);
     _user = User.fromJson(valueMap);
     for (var element in _user.data!) {
+      // ignore: avoid_print
       print(element.userName);
     }
     notifyListeners();
