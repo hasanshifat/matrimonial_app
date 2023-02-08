@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 
+import '../SignUp/Pages/otp_verify.dart';
 import '../SignUp/Pages/registration_page.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -16,11 +17,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const LoginPage(),
       );
-    // case BottomBar.routeName:
-    //   return MaterialPageRoute(
-    //     settings: routeSettings,
-    //     builder: (_) => const BottomBar(),
-    //   );
+    case OtpVerifyPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const OtpVerifyPage(),
+      );
     // case AddProductScreen.routeName:
     //   return MaterialPageRoute(
     //     settings: routeSettings,
