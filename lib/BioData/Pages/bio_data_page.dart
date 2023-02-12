@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
+
+import '../../Utils/color_codes.dart';
 
 class BioDataPage extends StatefulWidget {
   static const String routeName = '/bioDataPage';
@@ -23,16 +26,15 @@ class _BioDataPageState extends State<BioDataPage> {
 
   String hintText = 'নির্বাচন করুন';
   String? selected;
+  bool isGeneralInfo = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -49,7 +51,7 @@ class _BioDataPageState extends State<BioDataPage> {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: GoogleFonts.anekBangla(
               color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(
@@ -94,8 +96,10 @@ class _BioDataPageState extends State<BioDataPage> {
           iconSize: 30,
           hint: Text(
             hintText,
-            style: const TextStyle(
+            style: GoogleFonts.anekBangla(
                 color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+            // style: const TextStyle(
+            //     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
           ),
           onChanged: (String? value) {
             // This is called when the user selects an item.
@@ -111,10 +115,14 @@ class _BioDataPageState extends State<BioDataPage> {
               value: value,
               child: Text(
                 value,
-                style: const TextStyle(
+                style: GoogleFonts.anekBangla(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.w500),
+                // style: const TextStyle(
+                //     color: Colors.black,
+                //     fontSize: 16,
+                //     fontWeight: FontWeight.w500),
               ),
             );
           }).toList(),
@@ -151,61 +159,132 @@ class _BioDataPageState extends State<BioDataPage> {
           child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              fieldLabel("বায়োডাটার ধরন"),
-              dropDown(AppConstants.bioDataType, selectedBioDataType),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("বৈবাহিক অবস্থা"),
-              dropDown(AppConstants.maritialStatus, selectedMaritialStatus),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("জন্মসন"),
-              textField(),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("উচ্চতা"),
-              dropDown(AppConstants.height, selectedHeight),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("গাত্রবর্ণ"),
-              dropDown(AppConstants.bodyColor, selectedBodyColor),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("ওজন"),
-              dropDown(AppConstants.weight, selectedWeight),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("রক্তের গ্রুপ"),
-              dropDown(AppConstants.bloodGroup, selectedBloodgroup),
-              const SizedBox(
-                height: 10,
-              ),
-              fieldLabel("জাতীয়তা"),
-              dropDown(AppConstants.nationality, selectedNationality),
-              const SizedBox(
-                height: 10,
-              ),
-              // SubmitButton(
-              //   width: 100,
-              //   press: () {},
-              //   text: "Save & Next",
-              //   textColor: Colors.white,
-              //   color: Colors.purpleAccent,
-              //   borderColor: Colors.transparent,
-              // )
-            ],
-          ),
+          child: generalInfo(),
         ),
       )),
+    );
+  }
+
+  Widget address() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "সাধারণ তথ্য",
+          style: GoogleFonts.anekBangla(
+              color: ColorCodes.primaryPink,
+              fontSize: 22,
+              fontWeight: FontWeight.bold),
+        ),
+        graytext("Next: ঠিকানা"),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  Widget generalInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "সাধারণ তথ্য",
+          style: GoogleFonts.anekBangla(
+              color: ColorCodes.primaryPink,
+              fontSize: 22,
+              fontWeight: FontWeight.bold),
+        ),
+        graytext("Next: ঠিকানা"),
+        const SizedBox(
+          height: 10,
+        ),
+        const Divider(
+          height: 0.5,
+          color: Colors.grey,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("বায়োডাটার ধরন"),
+        dropDown(AppConstants.bioDataType, selectedBioDataType),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("বৈবাহিক অবস্থা"),
+        dropDown(AppConstants.maritialStatus, selectedMaritialStatus),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("জন্মসন"),
+        textField(),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("উচ্চতা"),
+        dropDown(AppConstants.height, selectedHeight),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("গাত্রবর্ণ"),
+        dropDown(AppConstants.bodyColor, selectedBodyColor),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("ওজন"),
+        dropDown(AppConstants.weight, selectedWeight),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("রক্তের গ্রুপ"),
+        dropDown(AppConstants.bloodGroup, selectedBloodgroup),
+        const SizedBox(
+          height: 10,
+        ),
+        fieldLabel("জাতীয়তা"),
+        dropDown(AppConstants.nationality, selectedNationality),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SubmitButton(
+                color: Colors.grey,
+                elevation: 0,
+                borderColor: Colors.transparent,
+                borderWidth: 0,
+                text: "Back",
+                buttonRadius: 10,
+                height: 50,
+                width: 100,
+                fontWeight: FontWeight.w500,
+                textColor: Colors.white,
+                textSize: 16,
+                press: () {}),
+            SubmitButton(
+                elevation: 0,
+                borderColor: Colors.transparent,
+                borderWidth: 0,
+                text: "Save & Next",
+                buttonRadius: 10,
+                height: 50,
+                width: 100,
+                fontWeight: FontWeight.w500,
+                textColor: Colors.white,
+                textSize: 16,
+                press: () {}),
+          ],
+        )
+        // SubmitButton(
+        //   width: 100,
+        //   press: () {},
+        //   text: "Save & Next",
+        //   textColor: Colors.white,
+        //   color: Colors.purpleAccent,
+        //   borderColor: Colors.transparent,
+        // )
+      ],
     );
   }
 }
