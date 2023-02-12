@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matrimonial_app/BioData/Pages/bio_data_page.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import 'package:matrimonial_app/Login/Provider/user.dart';
 import 'package:matrimonial_app/SignUp/Pages/registration_page.dart';
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
           primarySwatch: Colors.blue,
         ),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: const FabricLagbe()
+        home: const BioDataPage()
 
         // Provider.of<UserProvider>(context, listen: false).user.token.isEmpty
         //     ? const LoginPage()
