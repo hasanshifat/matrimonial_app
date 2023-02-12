@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:matrimonial_app/Homepage/pages/homepage.dart';
+import 'package:matrimonial_app/Homepage/pages/navigation_bar_page.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import 'package:matrimonial_app/Login/Provider/user.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +34,15 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+            backgroundColor: Colors.white,
+            scaffoldBackgroundColor: Colors.white,
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+                color: Colors.white,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: Colors.white,
+                    statusBarIconBrightness: Brightness.dark,
+                    statusBarBrightness: Brightness.dark))),
         onGenerateRoute: (settings) => generateRoute(settings),
         home: const LoginPage()
         //  Provider.of<UserProvider>(context, listen: false).user.token == null
