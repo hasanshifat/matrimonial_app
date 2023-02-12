@@ -39,6 +39,7 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
                 color: Colors.white,
+                surfaceTintColor: Colors.white,
                 systemOverlayStyle: SystemUiOverlayStyle(
                     statusBarColor: Colors.white,
                     statusBarIconBrightness: Brightness.dark,

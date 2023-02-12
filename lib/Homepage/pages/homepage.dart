@@ -6,6 +6,7 @@ import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/Homepage/Services/district_service.dart';
 import 'package:matrimonial_app/Homepage/model/district_model.dart';
 import 'package:matrimonial_app/Utils/color_codes.dart';
+import 'package:matrimonial_app/Utils/snackbars.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../model/marraige_type.dart';
@@ -18,8 +19,22 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  String img = 'unfav';
   final searchController = TextEditingController();
-  List<String> hobbiList = ['Reading', 'Writing', 'Singing', 'Cooking'];
+  List<String> hobbiList = [
+    'Reading',
+    'Writing',
+    'Singing',
+    'Cooking',
+    'Reding',
+    'Wriing',
+    'Sining',
+    'Cookin'
+  ];
+
+  List<String>? selectedHobby = [];
+  late List<String> occopationList;
+  late List<String> selectedOccopationList;
   late List<MarraigeType> marraigeTypesList;
   late List<String> biodataType;
   late List<String> divisonList;
@@ -34,14 +49,28 @@ class _HomepageState extends State<Homepage> {
   String? _selectedDistrict;
   String? _selectedThana;
   String? _selectedCountry;
-  SfRangeValues _valuesAge = SfRangeValues(20.0, 30.0);
-  SfRangeValues _valuesHeight = SfRangeValues(4.0, 10.0);
+  SfRangeValues _valuesAge = const SfRangeValues(20.0, 30.0);
+  SfRangeValues _valuesHeight = const SfRangeValues(4.0, 8.0);
+  Size? pageSize;
   @override
   void initState() {
     divisonList = [];
     districtList = [];
     thanaList = [];
     divDisThanaList = [];
+    selectedOccopationList = [];
+    occopationList = [
+      'শিক্ষার্থী',
+      'শিক্ষক',
+      'ইমাম',
+      'প্রকৌশলী',
+      'ডাক্তার',
+      'ব্যবসায়ী',
+      'অন্যান্য',
+      'ফ্রিল্যান্সার',
+      'সরকারী কর্মচারী',
+      'বেসরকারি কর্মচারী',
+    ];
     countryList = ['বাংলাদেশ'];
     biodataType = ['সকল', 'কনের বায়োডাটা', 'বরের বায়োডাটা'];
     marraigeTypesList = [
@@ -64,20 +93,14 @@ class _HomepageState extends State<Homepage> {
 
   setDistrictListModel(List<DistrictModel> list) {
     List div = [];
-    List dis = [];
-    List thana = [];
+
     setState(() {
       divDisThanaList = list;
       for (var element in divDisThanaList) {
         div.add(element.division.toString());
-        //dis.add(element.district.toString());
-        //thanaList.add(element.upazila.toString());
         List<String> divresult = LinkedHashSet<String>.from(div).toList();
-        //List<String> disresult = LinkedHashSet<String>.from(dis).toList();
-        // List<String> thanaresult = LinkedHashSet<String>.from(div).toList();
         divisonList = divresult;
-        //districtList = disresult;
-        // thanaList = thanaresult;
+        divisonList.insert(0, 'সকল');
       }
     });
   }
@@ -88,10 +111,12 @@ class _HomepageState extends State<Homepage> {
     setState(() {
       _selectedDistrict = null;
       _selectedThana = null;
+
       for (var element in divDisThanaList) {
         if (element.division == _selectedDivision) {
           dis.add(element.district.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
+          divresult.insert(0, 'সকল');
         }
         districtList = divresult;
       }
@@ -107,6 +132,7 @@ class _HomepageState extends State<Homepage> {
         if (element.district == _selectedDistrict) {
           dis.add(element.upazila.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
+          divresult.insert(0, 'সকল');
         }
         thanaList = divresult;
       }
@@ -115,192 +141,204 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    pageSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              filterWidget(),
-              const SizedBox(
-                height: 10,
-              ),
-              contentWidget(context),
-              contentWidget(context),
-            ],
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 5,
           ),
-        ),
+          filterWidget(),
+          const SizedBox(
+            height: 5,
+          ),
+          Expanded(
+              child: SingleChildScrollView(
+            child: Column(
+              children: [
+                contentWidget(context),
+                contentWidget(context),
+              ],
+            ),
+          )),
+        ],
       ),
     );
   }
 
   Padding contentWidget(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        width: MediaQuery.of(context).size.width * 0.8,
+        // height: 450,
+        // width: pageSize!.width * 0.8,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
                 color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5)),
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                    // color: ColorCodes.purpleBlue.withOpacity(0.1),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        ColorCodes.seconderyStrongPink,
-                        ColorCodes.primaryPink,
-                      ],
-                      stops: [0.2, 2.0],
-                    ),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10))),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: CircleAvatar(
-                          maxRadius: 100,
-                          backgroundColor: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            child: Center(
-                              child: Image.asset('assets/images/muslim.png',
-                                  color: ColorCodes.purpleBlue),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'MAF102',
-                      style: GoogleFonts.anekBangla(
-                          fontSize: 25,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                  ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () => setState(() {
+                  img = 'fav';
+                }),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Image.asset('assets/images/$img.png',
+                      height: 25, width: 25, color: ColorCodes.primaryPink),
                 ),
               ),
             ),
-            Expanded(
-                child: Container(
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'শখ ও আগ্রহ',
-                          style: GoogleFonts.anekBangla(
-                              fontSize: 14,
-                              color: ColorCodes.deepGrey,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                              children: hobbiList
-                                  .map((e) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: Chip(
-                                            backgroundColor: ColorCodes
-                                                .primaryPurple
-                                                .withOpacity(0.1),
-                                            label: Text(
-                                              e,
-                                              style: GoogleFonts.anekBangla(
-                                                  fontSize: 12,
-                                                  color: ColorCodes.deepGrey,
-                                                  fontWeight: FontWeight.w500),
-                                            )),
-                                      ))
-                                  .toList()),
-                        ),
-                        const Divider(
-                          thickness: 1,
-                        ),
-                        Table(
-                          defaultColumnWidth: const IntrinsicColumnWidth(),
-                          border: TableBorder(
-                              horizontalInside: BorderSide(
-                                  width: 0.8,
-                                  color: Colors.grey.shade100,
-                                  style: BorderStyle.solid)),
-                          children: [
-                            // _tableRow('জন্ম সাল', '1996'),
-                            _tableRow('বৈবাহিক অবস্থা', 'অবিবাহিত'),
-                            _tableRow('জেলা', 'পাবনা'),
-                            _tableRow('পেশা', 'প্রকৌশলী')
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
-                          child: SubmitButton(
-                              elevation: 0,
-                              borderColor: Colors.transparent,
-                              gradColor1: ColorCodes.softGreen.withOpacity(0.5),
-                              gradColor2: ColorCodes.softGreen.withOpacity(0.5),
-                              borderWidth: 0,
-                              text: "বিস্তারিত দেখুন",
-                              buttonRadius: 8,
-                              height: 30,
-                              width: double.infinity,
-                              fontWeight: FontWeight.w500,
-                              textColor: ColorCodes.deepGrey,
-                              textSize: 14,
-                              press: (() {})),
-                        )
-                      ],
-                    )))
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: CircleAvatar(
+                    maxRadius: 50,
+                    backgroundColor: ColorCodes.primaryPurple.withOpacity(0.1),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
+                      child: Center(
+                        child: Image.asset('assets/images/muslim.png',
+                            color: ColorCodes.purpleBlue),
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  'MAF102',
+                  style: GoogleFonts.anekBangla(
+                      fontSize: 25,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'শখ ও আগ্রহ',
+                  style: GoogleFonts.anekBangla(
+                      fontSize: 14,
+                      color: ColorCodes.deepGrey,
+                      fontWeight: FontWeight.w500),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: hobbiList
+                          .map((e) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Chip(
+                                    backgroundColor: ColorCodes.primaryPurple
+                                        .withOpacity(0.1),
+                                    label: Text(
+                                      e,
+                                      style: GoogleFonts.anekBangla(
+                                          fontSize: 12,
+                                          color: ColorCodes.deepGrey,
+                                          fontWeight: FontWeight.w500),
+                                    )),
+                              ))
+                          .toList()),
+                ),
+                const Divider(
+                  thickness: 1,
+                ),
+                Table(
+                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                  border: TableBorder(
+                      horizontalInside: BorderSide(
+                          width: 0.8,
+                          color: Colors.grey.shade100,
+                          style: BorderStyle.solid)),
+                  children: [
+                    // _tableRow('জন্ম সাল', '1996'),
+                    _tableRow('বৈবাহিক অবস্থা', 'অবিবাহিত'),
+                    _tableRow('জেলা', 'পাবনা'),
+                    _tableRow('পেশা', 'প্রকৌশলী')
+                  ],
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: SubmitButton(
+                      elevation: 0,
+                      borderColor: Colors.transparent,
+                      gradColor1: ColorCodes.softGreen.withOpacity(0.5),
+                      gradColor2: ColorCodes.softGreen.withOpacity(0.5),
+                      borderWidth: 0,
+                      text: "বিস্তারিত দেখুন",
+                      buttonRadius: 8,
+                      height: 30,
+                      width: double.infinity,
+                      fontWeight: FontWeight.w500,
+                      textColor: ColorCodes.deepGrey,
+                      textSize: 14,
+                      press: (() {
+                        // var content = Row(
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        //     Text(
+                        //       'আপনার অ্যাকাউন্ট নেই অথবা ',
+                        //       style: GoogleFonts.anekBangla(
+                        //           fontSize: 14,
+                        //           color: Colors.white,
+                        //           fontWeight: FontWeight.w500),
+                        //     ),
+                        //     Text(
+                        //       ' লগইন করুন',
+                        //       style: GoogleFonts.anekBangla(
+                        //           fontSize: 14,
+                        //           color: Colors.white,
+                        //           fontWeight: FontWeight.bold,
+                        //           decoration: TextDecoration.underline,
+                        //           decorationColor:
+                        //               ColorCodes.seconderyStrongPink,
+                        //           decorationThickness: 2),
+                        //     ),
+                        //   ],
+                        // );
+                        // CustomSnackBars().snackBarWithContent(
+                        //     context, ColorCodes.deepGreen, content);
+                      })),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Row filterWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        InkWell(
-          onTap: () {
-            setState(() {
-              districtList.clear();
-              thanaList.clear();
-              _selectedMarraigeType = null;
-              _selectedDivision = null;
-              _selectedDistrict = null;
-              _selectedThana = null;
-            });
+  GestureDetector filterWidget() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          districtList.clear();
+          thanaList.clear();
+          _selectedMarraigeType = null;
+          _selectedDivision = null;
+          _selectedDistrict = null;
+          _selectedThana = null;
+        });
 
-            filterDialog(context);
-          },
-          child: Container(
+        filterDialog(context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
             decoration: BoxDecoration(
-                color: ColorCodes.seconderyStrongPink.withOpacity(0.05),
+                color: ColorCodes.deepGrey.withOpacity(0.05),
                 // gradient: LinearGradient(
                 //   begin: Alignment.centerLeft,
                 //   end: Alignment.centerRight,
@@ -315,8 +353,7 @@ class _HomepageState extends State<Homepage> {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: Row(
                 children: [
-                  const Icon(Icons.filter_list,
-                      color: ColorCodes.seconderyStrongPink),
+                  const Icon(Icons.filter_list, color: ColorCodes.deepGrey),
                   const SizedBox(
                     width: 5,
                   ),
@@ -324,14 +361,14 @@ class _HomepageState extends State<Homepage> {
                     "ফিল্টার",
                     style: GoogleFonts.anekBangla(
                         fontWeight: FontWeight.w500,
-                        color: ColorCodes.seconderyStrongPink),
+                        color: ColorCodes.deepGrey),
                   )
                 ],
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -351,123 +388,163 @@ class _HomepageState extends State<Homepage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10)),
-                  child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "ফিল্টার করুন",
-                          style: GoogleFonts.anekBangla(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              color: ColorCodes.deepGrey),
-                        ),
-                        const Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            biodataTypeDropDown(),
-                            marraigeTypeDropDown(),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        //filterLocation()
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        Expanded(
+                            child: SingleChildScrollView(
+                          child: Column(
                             children: [
-                              Expanded(
-                                  child: countryDropDown(context, setState)),
                               const SizedBox(
-                                width: 10,
+                                height: 5,
                               ),
-                              Expanded(
-                                  child:
-                                      divisionTypeDropDown(context, setState)),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            children: [
-                              districtList.isEmpty
-                                  ? const SizedBox()
-                                  : Expanded(
-                                      child: districtTypeDropDown(
+                              Text(
+                                "ফিল্টার করুন",
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    color: ColorCodes.deepGrey),
+                              ),
+                              const Divider(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: biodataTypeDropDown(
                                           context, setState)),
-                              const SizedBox(
-                                width: 10,
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                      child: marraigeTypeDropDown(
+                                          context, setState)),
+                                ],
                               ),
-                              thanaList.isEmpty
-                                  ? const SizedBox()
-                                  : Expanded(
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              //filterLocation()
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Expanded(
                                       child:
-                                          thanaTypeDropDown(context, setState))
+                                          countryDropDown(context, setState)),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                      child: divisionTypeDropDown(
+                                          context, setState)),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  districtList.isEmpty
+                                      ? const SizedBox()
+                                      : Expanded(
+                                          child: districtTypeDropDown(
+                                              context, setState)),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  thanaList.isEmpty
+                                      ? const SizedBox()
+                                      : Expanded(
+                                          child: thanaTypeDropDown(
+                                              context, setState))
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "বয়স নির্বাচন করুন",
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: ColorCodes.deepGrey),
+                              ),
+                              ageRangeWidget(setState),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "উচ্চতা নির্বাচন করুন",
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: ColorCodes.deepGrey),
+                              ),
+
+                              heightRangeWidget(setState),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "শখ ও আগ্রহ নির্বাচন করুন",
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: ColorCodes.deepGrey),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              hobbiesFilterWidget(setState),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "পেশা নির্বাচন করুন",
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: ColorCodes.deepGrey),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              occopationFilterWidget(setState)
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "বয়স নির্বাচন করুন",
-                          style: GoogleFonts.anekBangla(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: ColorCodes.deepGrey),
-                        ),
-                        SfRangeSlider(
-                          min: 18.0,
-                          max: 80.0,
-                          values: _valuesAge,
-                          interval: 20,
-                          stepSize: 1,
-                          showTicks: false,
-                          showLabels: true,
-                          enableTooltip: true,
-                          activeColor: ColorCodes.primaryPink,
-                          minorTicksPerInterval: 0,
-                          onChanged: (SfRangeValues values) {
-                            setState(() {
-                              _valuesAge = values;
-                            });
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "উচ্চতা নির্বাচন করুন",
-                          style: GoogleFonts.anekBangla(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: ColorCodes.deepGrey),
-                        ),
-                        SfRangeSlider(
-                          min: 4.0,
-                          max: 10.0,
-                          values: _valuesHeight,
-                          interval: 1,
-                          showTicks: true,
-                          showLabels: true,
-                          enableTooltip: true,
-                          stepSize: 0.1,
-                          activeColor: ColorCodes.primaryPurple,
-                          minorTicksPerInterval: 0,
-                          onChanged: (SfRangeValues values) {
-                            setState(() {
-                              _valuesHeight = values;
-                            });
-                          },
+                        )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SubmitButton(
+                                elevation: 2,
+                                borderColor: Colors.transparent,
+                                gradColor1: ColorCodes.seconderyStrongPink,
+                                gradColor2: ColorCodes.primaryPink,
+                                borderWidth: 0,
+                                text: "মুছে ফেলুন",
+                                buttonRadius: 10,
+                                height: 40,
+                                width: pageSize!.width * 0.35,
+                                fontWeight: FontWeight.w500,
+                                textColor: Colors.white,
+                                textSize: 16,
+                                press: (() => clearAll())),
+                            SubmitButton(
+                                elevation: 2,
+                                borderColor: Colors.transparent,
+                                gradColor1: ColorCodes.deepGreen,
+                                gradColor2: ColorCodes.softGreen,
+                                borderWidth: 0,
+                                text: "খুজুন",
+                                buttonRadius: 10,
+                                height: 40,
+                                width: pageSize!.width * 0.35,
+                                fontWeight: FontWeight.w500,
+                                textColor: Colors.white,
+                                textSize: 16,
+                                press: (() => {})),
+                          ],
                         ),
                         const SizedBox(
                           height: 10,
@@ -480,51 +557,153 @@ class _HomepageState extends State<Homepage> {
         }));
   }
 
-  Container filterLocation() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: ExpansionTile(
-          title: Text(
-            _selectedDivision.toString(),
-            style: GoogleFonts.anekBangla(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: ColorCodes.deepGrey),
-          ),
-          onExpansionChanged: (value) {
-            print(value);
-          },
-          children: [
-            SizedBox(
-              height: 100,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: divisonList
-                      .map((e) => ListTile(
-                            onTap: () => setState(() {
-                              _selectedDivision = e;
-                            }),
-                            title: Text(
-                              e,
-                              style: GoogleFonts.anekBangla(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: ColorCodes.deepGrey),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ),
-            )
-          ]),
+  Wrap hobbiesFilterWidget(StateSetter setState) {
+    return Wrap(
+      children: hobbiList.map(
+        (hobby) {
+          bool isSelected = false;
+          if (selectedHobby!.contains(hobby)) {
+            isSelected = true;
+          }
+          return GestureDetector(
+            onTap: () {
+              if (!selectedHobby!.contains(hobby)) {
+                if (selectedHobby!.length < 10) {
+                  selectedHobby!.add(hobby);
+                  setState(() {});
+                  print(selectedHobby);
+                }
+                // else {
+                //   CustomSnackBars().showSnackBar(
+                //       context,
+                //       'সর্বোচ্চ ৫ টি নির্বাচন করতে পারেন',
+                //       ColorCodes.seconderyStrongPink);
+
+                //   print(selectedHobby);
+                // }
+              } else {
+                selectedHobby!.removeWhere((element) => element == hobby);
+                setState(() {});
+                print(selectedHobby);
+              }
+            },
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  decoration: BoxDecoration(
+                      color: isSelected ? ColorCodes.softGreen : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          width: 0.5,
+                          color: isSelected
+                              ? ColorCodes.deepGreen
+                              : ColorCodes.deepGrey)),
+                  child: Text(
+                    hobby,
+                    style: GoogleFonts.anekBangla(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: isSelected ? Colors.white : ColorCodes.deepGrey),
+                  ),
+                )),
+          );
+        },
+      ).toList(),
     );
   }
 
-  Container biodataTypeDropDown() {
+  Wrap occopationFilterWidget(StateSetter setState) {
+    return Wrap(
+      children: occopationList.map(
+        (occ) {
+          bool isSelected = false;
+          if (selectedOccopationList.contains(occ)) {
+            isSelected = true;
+          }
+          return GestureDetector(
+            onTap: () {
+              if (!selectedOccopationList.contains(occ)) {
+                if (selectedOccopationList.length < 10) {
+                  selectedOccopationList.add(occ);
+                  setState(() {});
+                  print(selectedOccopationList);
+                }
+              } else {
+                selectedOccopationList.removeWhere((element) => element == occ);
+                setState(() {});
+                print(selectedOccopationList);
+              }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Checkbox(
+                    value: isSelected,
+                    checkColor: Colors.white,
+                    fillColor: MaterialStateProperty.all(ColorCodes.purpleBlue),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    onChanged: ((value) {
+                      isSelected = value!;
+                    })),
+                Text(
+                  occ,
+                  style: GoogleFonts.anekBangla(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: ColorCodes.deepGrey),
+                )
+              ],
+            ),
+          );
+        },
+      ).toList(),
+    );
+  }
+
+  SfRangeSlider heightRangeWidget(StateSetter setState) {
+    return SfRangeSlider(
+      min: 4.0,
+      max: 10.0,
+      values: _valuesHeight,
+      interval: 1,
+      showTicks: true,
+      showLabels: true,
+      enableTooltip: true,
+      stepSize: 0.1,
+      activeColor: ColorCodes.primaryPurple,
+      minorTicksPerInterval: 0,
+      onChanged: (SfRangeValues values) {
+        setState(() {
+          _valuesHeight = values;
+        });
+      },
+    );
+  }
+
+  SfRangeSlider ageRangeWidget(StateSetter setState) {
+    return SfRangeSlider(
+      min: 18.0,
+      max: 60.0,
+      values: _valuesAge,
+      interval: 20,
+      stepSize: 1,
+      showTicks: false,
+      showLabels: true,
+      enableTooltip: true,
+      activeColor: ColorCodes.primaryPink,
+      minorTicksPerInterval: 0,
+      onChanged: (SfRangeValues values) {
+        setState(() {
+          _valuesAge = values;
+        });
+      },
+    );
+  }
+
+  Container biodataTypeDropDown(BuildContext context, StateSetter setState) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -565,7 +744,7 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Container marraigeTypeDropDown() {
+  Container marraigeTypeDropDown(BuildContext context, StateSetter setState) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -669,7 +848,14 @@ class _HomepageState extends State<Homepage> {
             onChanged: (newValue) {
               setState(() {
                 _selectedDivision = newValue.toString();
-                setDistrictAsDivision();
+
+                _selectedDivision == 'সকল' ? null : setDistrictAsDivision();
+                if (_selectedDivision == 'সকল') {
+                  districtList.clear();
+                  thanaList.clear();
+                  _selectedDistrict = null;
+                  _selectedThana = null;
+                }
               });
             },
             items: divisonList.map((e) {
@@ -697,7 +883,7 @@ class _HomepageState extends State<Homepage> {
           border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
           borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: const EdgeInsets.only(left: 5),
+        padding: const EdgeInsets.only(left: 2),
         child: DropdownButtonHideUnderline(
           child: DropdownButton(
             elevation: 6,
@@ -711,7 +897,14 @@ class _HomepageState extends State<Homepage> {
             onChanged: (newValue) {
               setState(() {
                 _selectedDistrict = newValue.toString();
-                setThanaAsDivisionNDistrict();
+                _selectedDistrict == 'সকল'
+                    ? null
+                    : setThanaAsDivisionNDistrict();
+
+                if (_selectedDistrict == 'সকল') {
+                  thanaList.clear();
+                  _selectedThana = null;
+                }
               });
             },
             items: districtList.map((e) {
@@ -738,36 +931,39 @@ class _HomepageState extends State<Homepage> {
           color: Colors.white,
           border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
           borderRadius: BorderRadius.circular(10)),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton(
-          elevation: 6,
-          borderRadius: BorderRadius.circular(10),
-          hint: Text('থানা',
-              style: GoogleFonts.anekBangla(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                  color: ColorCodes.deepGrey)), // Not necessary for Option 1
-          value: _selectedThana,
-          onChanged: (newValue) {
-            setState(() {
-              _selectedThana = newValue.toString();
-            });
-          },
-          items: thanaList.map((e) {
-            return DropdownMenuItem(
-              value: e,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 2),
-                child: Text(
-                  e.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 2),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton(
+            elevation: 6,
+            borderRadius: BorderRadius.circular(10),
+            hint: Text('থানা',
+                style: GoogleFonts.anekBangla(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
+            value: _selectedThana,
+            onChanged: (newValue) {
+              setState(() {
+                _selectedThana = newValue.toString();
+              });
+            },
+            items: thanaList.map((e) {
+              return DropdownMenuItem(
+                value: e,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 2),
+                  child: Text(
+                    e.toString(),
+                    style: GoogleFonts.anekBangla(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: ColorCodes.deepGrey),
+                  ),
                 ),
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -816,5 +1012,22 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
     ]);
+  }
+
+  clearAll() {
+    setState(() {
+      districtList.clear();
+      thanaList.clear();
+      selectedHobby!.clear();
+      selectedOccopationList.clear();
+      _selectedMarraigeType = null;
+      _selectedBiodataType = null;
+      _selectedDivision = null;
+      _selectedDistrict = null;
+      _selectedThana = null;
+      _selectedCountry = null;
+      _valuesAge = const SfRangeValues(20.0, 30.0);
+      _valuesHeight = const SfRangeValues(4.0, 8.0);
+    });
   }
 }
