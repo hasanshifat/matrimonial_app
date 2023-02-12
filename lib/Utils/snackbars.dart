@@ -18,4 +18,18 @@ class CustomSnackBars {
       ),
     );
   }
+
+  void snackBarWithContent(
+      BuildContext context, Color backgroundColor, Widget content) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        elevation: 0,
+        duration: const Duration(seconds: 3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: backgroundColor,
+        content: content,
+      ),
+    );
+  }
 }
