@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:matrimonial_app/Homepage/pages/profile.dart';
 import 'package:badges/badges.dart' as badges;
+import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
 import 'biodata.dart';
 import 'favpage.dart';
@@ -81,7 +82,7 @@ class _NavBarPageState extends State<NavBarPage> {
               ),
               InkWell(
                 onTap: () => setState(() {
-                  body = const FAvpage();
+                  body = const ShortListPage();
                   isHomeActive = false;
                   isBiodataActive = false;
                   isFavActive = true;
