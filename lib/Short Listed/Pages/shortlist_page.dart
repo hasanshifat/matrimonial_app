@@ -38,7 +38,7 @@ class _ShortListPageState extends State<ShortListPage> {
 
   Future boxInitialixation() async {
     box = await Hive.openBox('box');
-    box.put('shortListClass', ShortListedClass(biodataID: 200));
+    box.add(20);
   }
 
   @override
@@ -59,14 +59,12 @@ class _ShortListPageState extends State<ShortListPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           Navigator.pushNamedAndRemoveUntil(
             context,
             ShortListDetailsPage.routeName,
             (route) => true,
           );
-          ShortListedClass shortListedClass = box.get('shortListClass');
-          print('Box: ${shortListedClass.biodataID}');
         },
         child: Container(
           decoration: BoxDecoration(

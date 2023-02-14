@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../../Common UI/outline_button.dart';
+import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
 
 class ShortListDetailsPage extends StatefulWidget {
@@ -14,6 +17,7 @@ class ShortListDetailsPage extends StatefulWidget {
 class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
   Size? pageSize;
   bool isLoading = false;
+  bool isRead = false;
   @override
   void initState() {
     delayed();
@@ -38,10 +42,25 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
           style: const TextTheme().labelLarge,
         ),
         centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: GestureDetector(
+              onTap: () async => await Share.share(
+                  'check out my website https://example.com',
+                  subject: 'Share'),
+              child: const Icon(
+                Icons.share,
+                color: ColorCodes.purpleBlue,
+                size: 20,
+              ),
+            ),
+          )
+        ],
       ),
       body: SafeArea(
           child: isLoading == false
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(),
                 )
               : Padding(
@@ -139,11 +158,32 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                               color: ColorCodes.purpleBlue),
                         ),
                         //? Table of Educational  details of bride/groom
-                        familyDetailsTable()
+                        familyDetailsTable(),
+                        const SizedBox(
+                          height: 10,
+                        ),
                       ],
                     ),
                   ),
                 )),
+      bottomNavigationBar: SafeArea(
+          child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        child: SubmitButton(
+            elevation: 0,
+            borderColor: Colors.transparent,
+            gradColor1: ColorCodes.softGreen,
+            gradColor2: ColorCodes.softGreen,
+            borderWidth: 0,
+            text: "যোগাযোগের জন্য অনুরোধ পাঠান",
+            buttonRadius: 8,
+            height: 40,
+            width: double.infinity,
+            fontWeight: FontWeight.w500,
+            textColor: Colors.white,
+            textSize: 16,
+            press: () => requestConfirmationDialog(context)),
+      )),
     );
   }
 
@@ -347,5 +387,117 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
             ),
           ),
         ]);
+  }
+
+  requestConfirmationDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) => StatefulBuilder(
+            builder: ((context, setState) => Dialog(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            child: Text(
+                              'সতর্কতা',
+                              style: GoogleFonts.anekBangla(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  color: ColorCodes.softRed),
+                            ),
+                          ),
+                          Table(
+                            defaultColumnWidth: const IntrinsicColumnWidth(),
+                            children: [
+                              _tableRow('বায়োডাটার ধরন', 'কনের'),
+                              _tableRow('বায়োডাটা নম্বর', 'MAF102'),
+                              // _tableRow('মোট সংযোগ', '10'),
+                              _tableRow('সংযোগ বাকি আছে', '6'),
+                              _tableRow('সংযোগ খরচ হবে', '1'),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                  value: isRead,
+                                  checkColor: Colors.white,
+                                  fillColor: MaterialStateProperty.all(
+                                      ColorCodes.purpleBlue),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  onChanged: ((value) {
+                                    setState(
+                                      () {
+                                        isRead = value!;
+                                      },
+                                    );
+                                  })),
+                              Text(
+                                'আমি মনোযোগ সহকারে সমস্ত তথ্য পড়েছি।',
+                                style: GoogleFonts.anekBangla(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    color: ColorCodes.softRed),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              OutLineButton(
+                                  elevation: 2,
+                                  borderColor:
+                                      ColorCodes.deepGrey.withOpacity(0.8),
+                                  color: !isRead
+                                      ? Colors.grey.shade100
+                                      : Colors.white,
+                                  borderWidth: 0,
+                                  text: "নিশ্চিত করুন",
+                                  buttonRadius: 8,
+                                  height: 30,
+                                  width: pageSize!.width * 0.35,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: !isRead
+                                      ? Colors.grey
+                                      : ColorCodes.deepGreen,
+                                  textSize: 14,
+                                  press: isRead ? null : (() => null)),
+                              OutLineButton(
+                                  elevation: 2,
+                                  borderColor:
+                                      ColorCodes.deepGrey.withOpacity(0.8),
+                                  color: Colors.white,
+                                  borderWidth: 0,
+                                  text: "বাতিল করুন",
+                                  buttonRadius: 8,
+                                  height: 30,
+                                  width: pageSize!.width * 0.35,
+                                  fontWeight: FontWeight.w500,
+                                  textColor: ColorCodes.softRed,
+                                  textSize: 14,
+                                  press: (() => Navigator.of(context).pop())),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )))));
   }
 }
