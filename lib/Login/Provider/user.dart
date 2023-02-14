@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../Model/user_model.dart';
@@ -11,8 +13,12 @@ class UserProvider extends ChangeNotifier {
   User get user => _user;
 
   void setUser(String user) {
-    _user = User.fromJson(user);
-    print(_user.data);
+    Map<String, dynamic> valueMap = json.decode(user);
+    _user = User.fromJson(valueMap);
+    for (var element in _user.data!) {
+      // ignore: avoid_print
+      print(element.userName);
+    }
     notifyListeners();
   }
 
