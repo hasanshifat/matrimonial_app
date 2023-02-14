@@ -99,6 +99,23 @@ class _NavBarPageState extends State<NavBarPage> {
                 ),
               ),
               InkWell(
+                  onTap: () => setState(() {
+                        body = const Profile();
+                        isHomeActive = false;
+                        isBiodataActive = false;
+                        isFavActive = false;
+                        isProfileActive = false;
+                        isNotificationActive = true;
+                      }),
+                  child: Image.asset(
+                    'assets/images/request.png',
+                    height: 25,
+                    width: 25,
+                    color: isNotificationActive == true
+                        ? ColorCodes.primaryPink
+                        : ColorCodes.deepGrey,
+                  )),
+              InkWell(
                 onTap: () => setState(() {
                   body = const Biodata();
                   isHomeActive = false;
@@ -116,23 +133,6 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
-              InkWell(
-                  onTap: () => setState(() {
-                        body = const Profile();
-                        isHomeActive = false;
-                        isBiodataActive = false;
-                        isFavActive = false;
-                        isProfileActive = false;
-                        isNotificationActive = true;
-                      }),
-                  child: Image.asset(
-                    'assets/images/bell.png',
-                    height: 25,
-                    width: 25,
-                    color: isNotificationActive == true
-                        ? ColorCodes.primaryPink
-                        : ColorCodes.deepGrey,
-                  )),
               InkWell(
                 onTap: () => setState(() {
                   body = const Profile();

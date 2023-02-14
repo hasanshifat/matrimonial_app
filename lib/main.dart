@@ -15,7 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
-
+  await Hive.openBox('shortListBox');
   Hive.registerAdapter(ShortListedClassAdapter());
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
