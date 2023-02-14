@@ -3,39 +3,46 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:matrimonial_app/Constants/url.dart';
-import 'package:matrimonial_app/SignUp/Pages/registration_page.dart';
+import 'package:matrimonial_app/Utils/auth_class.dart';
 import 'package:matrimonial_app/Utils/snackbars.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../Utils/color_codes.dart';
-import '../Provider/user.dart';
+import '../Pages/registration_page.dart';
 
-class LoginService {
-  Future loginService(
-      BuildContext context, String? username, String? password) async {
+class RegistrationService {
+  Future regService(BuildContext context, Map<String, String> regData,
+      Map<String, String> logData) async {
     try {
       http.Response res = await http.post(
-        Uri.parse('${ApiURL.baseLink}/app/login'),
-        body: jsonEncode({
-          'USER_NAME': username,
-          'USER_PASS': password,
-        }),
+        Uri.parse('${ApiURL.baseLink}/user_master/'),
+        body: json.encode(regData),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': BasicAuth().basicAuth
         },
       );
-      //print("error: ${jsonDecode(res.body)['message']}");
+      http.Response resLogin = await http.post(
+        Uri.parse('${ApiURL.baseLink}/user_login/'),
+        body: json.encode(logData),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': BasicAuth().basicAuth
+        },
+      );
+      print("Body Master: ${jsonDecode(res.body)}");
+      print("Body Login: ${jsonDecode(resLogin.body)}");
       //print(res.statusCode);
-      if (jsonDecode(res.body)['message'] == 'Success') {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (res.statusCode == 200 && resLogin.statusCode == 200) {
         // ignore: use_build_context_synchronously
-        Provider.of<UserProvider>(context, listen: false).setUser(res.body);
-        await prefs.setString('token', jsonDecode(res.body)['token']);
+        CustomSnackBars().showSnackBar(
+          context,
+          'রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে',
+          ColorCodes.softGreen,
+        );
         // ignore: use_build_context_synchronously
         Navigator.pushNamedAndRemoveUntil(
           context,
           RegistrationPage.routeName,
-          (route) => false,
+          (route) => true,
         );
       } else {
         // ignore: use_build_context_synchronously
