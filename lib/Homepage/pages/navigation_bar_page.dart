@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:badges/badges.dart' as badges;
 import '../../BioData/Pages/bio_data_page.dart';
+import '../../Biodata Request/Pages/biodata_request_page.dart';
 import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
 
@@ -116,7 +117,7 @@ class _NavBarPageState extends State<NavBarPage> {
               ),
               GestureDetector(
                   onTap: () => setState(() {
-                        body = const ShortListPage();
+                        body = const BioDataRequestPage();
                         isHomeActive = false;
                         isBiodataActive = false;
                         isFavActive = false;
