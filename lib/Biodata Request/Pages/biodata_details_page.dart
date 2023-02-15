@@ -6,21 +6,24 @@ import '../../Common UI/outline_button.dart';
 import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
 
-class ShortListDetailsPage extends StatefulWidget {
-  static const String routeName = '/shortListDetailsPage';
-  const ShortListDetailsPage({super.key});
+class BioDataRequestDetailsPage extends StatefulWidget {
+  static const String routeName = '/BioDataRequestDetailsPage';
+  final bool isAccepted;
+  const BioDataRequestDetailsPage({super.key, required this.isAccepted});
 
   @override
-  State<ShortListDetailsPage> createState() => _ShortListDetailsPageState();
+  State<BioDataRequestDetailsPage> createState() =>
+      _BioDataRequestDetailsPageState();
 }
 
-class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
+class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
   Size? pageSize;
   bool isLoading = false;
   bool isRead = false;
   @override
   void initState() {
     delayed();
+    print("Value: ${widget.isAccepted}");
     super.initState();
   }
 
@@ -71,56 +74,63 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        decoration: BoxDecoration(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Image.asset(
+                                              'assets/images/muslim.png', //yl-bg
+                                              width: pageSize!.height * 0.13,
+                                              height: pageSize!.height * 0.16,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
-                                        child: Image.asset(
-                                          'assets/images/muslim.png', //yl-bg
-                                          width: pageSize!.height * 0.13,
-                                          height: pageSize!.height * 0.16,
-                                          fit: BoxFit.cover,
+                                        Text(
+                                          'MAF102',
+                                          style: GoogleFonts.anekBangla(
+                                              fontSize: 25,
+                                              color: ColorCodes.deepGrey
+                                                  .withOpacity(0.8),
+                                              fontWeight: FontWeight.w500),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    Text(
-                                      'MAF102',
-                                      style: GoogleFonts.anekBangla(
-                                          fontSize: 25,
-                                          color: ColorCodes.deepGrey
-                                              .withOpacity(0.8),
-                                          fontWeight: FontWeight.w500),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: VerticalDivider(
+                                      width: 0.5,
+                                      thickness: .5,
+                                      color:
+                                          ColorCodes.deepGrey.withOpacity(0.5),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  //? Table of basic details of bride/groom
+                                  basicDetailsTable(),
+                                ],
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: VerticalDivider(
-                                  width: 0.5,
-                                  thickness: .5,
-                                  color: ColorCodes.deepGrey.withOpacity(0.5),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              //? Table of basic details of bride/groom
-                              basicDetailsTable(),
+                              widget.isAccepted ? const SizedBox() : _rowBtn()
                             ],
                           ),
                         ),
@@ -166,24 +176,49 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                     ),
                   ),
                 )),
-      bottomNavigationBar: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        child: SubmitButton(
-            elevation: 0,
-            borderColor: Colors.transparent,
-            gradColor1: ColorCodes.softGreen,
-            gradColor2: ColorCodes.softGreen,
-            borderWidth: 0,
-            text: "যোগাযোগের জন্য অনুরোধ পাঠান",
-            buttonRadius: 8,
-            height: 40,
-            width: double.infinity,
-            fontWeight: FontWeight.w500,
-            textColor: Colors.white,
-            textSize: 16,
-            press: () => requestConfirmationDialog(context)),
-      )),
+    );
+  }
+
+  _rowBtn() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(
+          child: SubmitButton(
+              elevation: 2,
+              borderColor: Colors.transparent,
+              gradColor1: ColorCodes.purpleBlue,
+              gradColor2: ColorCodes.purpleBlue,
+              borderWidth: 0,
+              text: "গ্রহণ করুন",
+              buttonRadius: 8,
+              height: 30,
+              width: 200,
+              fontWeight: FontWeight.w500,
+              textColor: Colors.white,
+              textSize: 14,
+              press: (() => {})),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: SubmitButton(
+              elevation: 2,
+              borderColor: Colors.transparent,
+              gradColor1: ColorCodes.deepGrey.withOpacity(0.5),
+              gradColor2: ColorCodes.deepGrey.withOpacity(0.5),
+              borderWidth: 0,
+              text: "প্রত্যাখ্যান করুন",
+              buttonRadius: 8,
+              height: 30,
+              width: 200,
+              fontWeight: FontWeight.w500,
+              textColor: Colors.white,
+              textSize: 14,
+              press: (() => {})),
+        ),
+      ]),
     );
   }
 
@@ -297,11 +332,10 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
 
   BorderSide tableBorderDesign() {
     return BorderSide(
-      width: 0.5,
-      color: ColorCodes.deepGrey.withOpacity(0.5),
-      style: BorderStyle.solid,
-      // strokeAlign: StrokeAlign.outside
-    );
+        width: 0.5,
+        color: ColorCodes.deepGrey.withOpacity(0.5),
+        style: BorderStyle.solid,
+        strokeAlign: StrokeAlign.outside);
   }
 
   Table basicDetailsTable() {

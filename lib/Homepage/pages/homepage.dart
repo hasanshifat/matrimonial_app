@@ -9,6 +9,7 @@ import 'package:matrimonial_app/Utils/color_codes.dart';
 import 'package:matrimonial_app/Utils/snackbars.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
+import '../../Short Listed/Pages/shortlist_details_page.dart';
 import '../model/marraige_type.dart';
 
 class Homepage extends StatefulWidget {
@@ -281,6 +282,11 @@ class _HomepageState extends State<Homepage> {
                       textColor: ColorCodes.deepGrey,
                       textSize: 14,
                       press: (() {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          ShortListDetailsPage.routeName,
+                          (route) => true,
+                        );
                         // var content = Row(
                         //   mainAxisSize: MainAxisSize.min,
                         //   children: [
@@ -509,7 +515,10 @@ class _HomepageState extends State<Homepage> {
                               const SizedBox(
                                 height: 5,
                               ),
-                              occopationFilterWidget(setState)
+                              occopationFilterWidget(setState),
+                              const SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
                         )),
@@ -529,7 +538,24 @@ class _HomepageState extends State<Homepage> {
                                 fontWeight: FontWeight.w500,
                                 textColor: Colors.white,
                                 textSize: 16,
-                                press: (() => clearAll())),
+                                press: (() => {
+                                      setState(() {
+                                        districtList.clear();
+                                        thanaList.clear();
+                                        selectedHobby!.clear();
+                                        selectedOccopationList.clear();
+                                        _selectedMarraigeType = null;
+                                        _selectedBiodataType = null;
+                                        _selectedDivision = null;
+                                        _selectedDistrict = null;
+                                        _selectedThana = null;
+                                        _selectedCountry = null;
+                                        _valuesAge =
+                                            const SfRangeValues(20.0, 30.0);
+                                        _valuesHeight =
+                                            const SfRangeValues(4.0, 8.0);
+                                      })
+                                    })),
                             SubmitButton(
                                 elevation: 2,
                                 borderColor: Colors.transparent,
@@ -614,52 +640,68 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Wrap occopationFilterWidget(StateSetter setState) {
-    return Wrap(
-      children: occopationList.map(
-        (occ) {
-          bool isSelected = false;
-          if (selectedOccopationList.contains(occ)) {
-            isSelected = true;
-          }
-          return GestureDetector(
-            onTap: () {
-              if (!selectedOccopationList.contains(occ)) {
-                if (selectedOccopationList.length < 10) {
-                  selectedOccopationList.add(occ);
+  SingleChildScrollView occopationFilterWidget(StateSetter setState) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: occopationList.map(
+          (occ) {
+            bool isSelected = false;
+            if (selectedOccopationList.contains(occ)) {
+              isSelected = true;
+            }
+            return GestureDetector(
+              onTap: () {
+                if (!selectedOccopationList.contains(occ)) {
+                  if (selectedOccopationList.length < 10) {
+                    selectedOccopationList.add(occ);
+                    setState(() {});
+                    print(selectedOccopationList);
+                  }
+                } else {
+                  selectedOccopationList
+                      .removeWhere((element) => element == occ);
                   setState(() {});
                   print(selectedOccopationList);
                 }
-              } else {
-                selectedOccopationList.removeWhere((element) => element == occ);
-                setState(() {});
-                print(selectedOccopationList);
-              }
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Checkbox(
-                    value: isSelected,
-                    checkColor: Colors.white,
-                    fillColor: MaterialStateProperty.all(ColorCodes.purpleBlue),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
-                    onChanged: ((value) {
-                      isSelected = value!;
-                    })),
-                Text(
-                  occ,
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                )
-              ],
-            ),
-          );
-        },
-      ).toList(),
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border:
+                          Border.all(width: 0.5, color: ColorCodes.deepGrey)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Checkbox(
+                            value: isSelected,
+                            checkColor: Colors.white,
+                            fillColor: MaterialStateProperty.all(
+                                ColorCodes.purpleBlue),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            onChanged: ((value) {
+                              isSelected = value!;
+                            })),
+                        Text(
+                          occ,
+                          style: GoogleFonts.anekBangla(
+                              fontSize: 12, color: ColorCodes.deepGrey),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 
@@ -1014,7 +1056,7 @@ class _HomepageState extends State<Homepage> {
     ]);
   }
 
-  clearAll() {
+  clearAll(BuildContext context) {
     setState(() {
       districtList.clear();
       thanaList.clear();

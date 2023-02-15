@@ -4,12 +4,11 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/BioData/Pages/bio_data_page.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
-import 'package:matrimonial_app/Homepage/pages/profile.dart';
 import 'package:badges/badges.dart' as badges;
+import '../../BioData/Pages/bio_data_page.dart';
+import '../../Biodata Request/Pages/biodata_request_page.dart';
 import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
-import 'biodata.dart';
-import 'favpage.dart';
 
 class NavBarPage extends StatefulWidget {
   const NavBarPage({super.key});
@@ -22,14 +21,30 @@ class _NavBarPageState extends State<NavBarPage> {
   bool isHomeActive = false;
   bool isFavActive = false;
   bool isBiodataActive = false;
-  bool isNotificationActive = false;
+  bool isRequestActive = false;
   bool isProfileActive = false;
   var body;
   @override
   void initState() {
     isHomeActive = true;
+    appName();
     body = const Homepage();
     super.initState();
+  }
+
+  String appName() {
+    String name;
+    if (isHomeActive) {
+      return name = 'App Name';
+    } else if (isFavActive) {
+      return name = 'প্রিয় তালিকা';
+    } else if (isRequestActive) {
+      return name = 'অনুরোধের তালিকা';
+    } else if (isProfileActive) {
+      return name = 'প্রোফাইল';
+    }
+
+    return name = 'App Name';
   }
 
   @override
@@ -43,7 +58,7 @@ class _NavBarPageState extends State<NavBarPage> {
           children: [
             const Spacer(),
             Text(
-              'App name',
+              appName(),
               style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
             ),
             const Spacer(),
@@ -63,14 +78,15 @@ class _NavBarPageState extends State<NavBarPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              InkWell(
+              GestureDetector(
                 onTap: () => setState(() {
                   body = const Homepage();
                   isHomeActive = true;
+                  appName();
                   isBiodataActive = false;
                   isFavActive = false;
                   isProfileActive = false;
-                  isNotificationActive = false;
+                  isRequestActive = false;
                 }),
                 child: Image.asset(
                   'assets/images/home.png',
@@ -81,14 +97,15 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
-              InkWell(
+              GestureDetector(
                 onTap: () => setState(() {
                   body = const ShortListPage();
                   isHomeActive = false;
                   isBiodataActive = false;
                   isFavActive = true;
+                  appName();
                   isProfileActive = false;
-                  isNotificationActive = false;
+                  isRequestActive = false;
                 }),
                 child: Image.asset(
                   'assets/images/favorites.png',
@@ -99,14 +116,32 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
-              InkWell(
+              GestureDetector(
+                  onTap: () => setState(() {
+                        body = const BioDataRequestPage();
+                        isHomeActive = false;
+                        isBiodataActive = false;
+                        isFavActive = false;
+                        isProfileActive = false;
+                        isRequestActive = true;
+                      }),
+                  child: Image.asset(
+                    'assets/images/request.png',
+                    height: 25,
+                    width: 25,
+                    color: isRequestActive == true
+                        ? ColorCodes.primaryPink
+                        : ColorCodes.deepGrey,
+                  )),
+              GestureDetector(
                 onTap: () => setState(() {
                   body = const BioDataPage();
                   isHomeActive = false;
                   isBiodataActive = true;
+                  appName();
                   isFavActive = false;
                   isProfileActive = false;
-                  isNotificationActive = false;
+                  isRequestActive = false;
                 }),
                 child: Image.asset(
                   'assets/images/mybiodata.png',
@@ -117,31 +152,15 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
-              InkWell(
-                  onTap: () => setState(() {
-                        body = const Profile();
-                        isHomeActive = false;
-                        isBiodataActive = false;
-                        isFavActive = false;
-                        isProfileActive = false;
-                        isNotificationActive = true;
-                      }),
-                  child: Image.asset(
-                    'assets/images/bell.png',
-                    height: 25,
-                    width: 25,
-                    color: isNotificationActive == true
-                        ? ColorCodes.primaryPink
-                        : ColorCodes.deepGrey,
-                  )),
-              InkWell(
+              GestureDetector(
                 onTap: () => setState(() {
-                  body = const Profile();
+                  body = const ShortListPage();
                   isHomeActive = false;
                   isBiodataActive = false;
                   isFavActive = false;
                   isProfileActive = true;
-                  isNotificationActive = false;
+                  appName();
+                  isRequestActive = false;
                 }),
                 child: Image.asset(
                   'assets/images/user.png',
@@ -176,7 +195,7 @@ class _NavBarPageState extends State<NavBarPage> {
         'assets/images/bell.png',
         height: 25,
         width: 25,
-        color: isNotificationActive == true
+        color: isRequestActive == true
             ? ColorCodes.primaryPink
             : ColorCodes.deepGrey,
       ),
