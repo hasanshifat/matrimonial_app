@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import '../BioData/Pages/bio_data_page.dart';
+import '../Biodata Request/Pages/biodata_details_page.dart';
 import '../Short Listed/Pages/shortlist_details_page.dart';
 import '../Short Listed/Pages/shortlist_page.dart';
 import '../SignUp/Pages/otp_verify.dart';
@@ -38,17 +39,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case BioDataPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) =>const BioDataPage(
+        builder: (_) => const BioDataPage(),
+      );
+    case BioDataRequestDetailsPage.routeName:
+      bool value = routeSettings.arguments as bool;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => BioDataRequestDetailsPage(
+          isAccepted: value,
         ),
       );
-    // case ProductDetailScreen.routeName:
-    //   var product = routeSettings.arguments as Product;
-    //   return MaterialPageRoute(
-    //     settings: routeSettings,
-    //     builder: (_) => ProductDetailScreen(
-    //       product: product,
-    //     ),
-    //   );
     // case AddressScreen.routeName:
     //   var totalAmount = routeSettings.arguments as String;
     //   return MaterialPageRoute(
