@@ -68,4 +68,31 @@ class AppConstants {
     '৫\'১০"',
     '৫\'১১"',
   ];
+  static const List<String> educationType = ['জেনারেল', 'কওমি', 'আলিয়া'];
+  static const List<String> generalEduHstDgr = [
+    'এস.এস.সি\'র নিচে',
+    'এস.এস.সি',
+    'এইচ.এস.সি',
+    'ডিপ্লোমা চলমান',
+    'ডিপ্লোমা',
+    'স্নাতক চলমান',
+    'স্নাতক',
+    'স্নাতকোত্তর',
+    'ডক্টরেট'
+  ];
+  static const List<String> educationDept = [
+    'বিজ্ঞান বিভাগ',
+    'ব্যবসা বিভাগ',
+    'মানবিক বিভাগ',
+    'ভোকেশনাল'
+  ];
+  static const List<String> sscResult = [
+    'Golden A+',
+    'A+',
+    'A',
+    'A-',
+    'B',
+    'C',
+    'D'
+  ];
 }

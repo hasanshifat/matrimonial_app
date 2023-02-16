@@ -29,6 +29,7 @@ class _BioDataPageState extends State<BioDataPage>
   String? selectedBodyColor;
   String? selectedBloodgroup;
   String? selectedNationality;
+  String? selectedEducation;
 
   String hintText = 'নির্বাচন করুন';
   String? selected;
@@ -37,23 +38,44 @@ class _BioDataPageState extends State<BioDataPage>
 
   late AnimationController animationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 400));
+  late AnimationController animationController2 = AnimationController(
+      vsync: this, duration: const Duration(milliseconds: 400));
   late AnimationController divisonAnimationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 400));
+  late AnimationController permanentDivisonAnimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 400));
   late AnimationController zillaAnimationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 400));
+  late AnimationController permanentZillaAnimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 400));
   late AnimationController upoZillaAnimationController = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 400));
+  late AnimationController permanentUpoZillaAnimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 400));
   // late AnimationController animationControllerReverse =
   //     AnimationController(vsync: this, duration: const Duration(seconds: 1))
   //       ..reverse();
   late Animation<double> animation = CurvedAnimation(
       parent: animationController, curve: Curves.easeInOutCubic);
+  late Animation<double> animation2 = CurvedAnimation(
+      parent: animationController2, curve: Curves.easeInOutCubic);
   late Animation<double> divisonAnimation = CurvedAnimation(
       parent: divisonAnimationController, curve: Curves.easeInOutCubic);
+  late Animation<double> permanentDivisonAnimation = CurvedAnimation(
+      parent: permanentDivisonAnimationController,
+      curve: Curves.easeInOutCubic);
   late Animation<double> zillaAnimation = CurvedAnimation(
       parent: zillaAnimationController, curve: Curves.easeInOutCubic);
+  late Animation<double> permanentZillaAnimation = CurvedAnimation(
+      parent: permanentZillaAnimationController, curve: Curves.easeInOutCubic);
   late Animation<double> upoZillaAnimation = CurvedAnimation(
       parent: upoZillaAnimationController, curve: Curves.easeInOutCubic);
+  late Animation<double> permanentUpoZillaAnimation = CurvedAnimation(
+      parent: permanentUpoZillaAnimationController,
+      curve: Curves.easeInOutCubic);
 
   bool isButtonShow = true;
   bool isPermanentButtonShow = true;
@@ -62,10 +84,16 @@ class _BioDataPageState extends State<BioDataPage>
   bool isDivision = false;
   bool isZilla = false;
   bool isUpoZilla = false;
+  bool isPermanentDivision = false;
+  bool isPermanentZilla = false;
+  bool isPermanentUpoZilla = false;
   late List<DistrictModel> divDisThanaList;
   late List<String> divisonList;
+  late List<String> divisonList2;
   late List<String> districtList;
+  late List<String> districtList2;
   late List<String> thanaList;
+  late List<String> thanaList2;
   String? _selectedDivision;
   String? _selectedDistrict;
   String? _selectedThana;
@@ -79,7 +107,9 @@ class _BioDataPageState extends State<BioDataPage>
   void initState() {
     divisonList = [];
     districtList = [];
+    districtList2 = [];
     thanaList = [];
+    thanaList2 = [];
     divDisThanaList = [];
     countryList = ['বাংলাদেশ'];
     getDistricNames();
@@ -110,6 +140,7 @@ class _BioDataPageState extends State<BioDataPage>
         div.add(element.division.toString());
         List<String> divresult = LinkedHashSet<String>.from(div).toList();
         divisonList = divresult;
+        divisonList2 = divresult;
         // divisonList.insert(0, 'সকল');
       }
     });
@@ -121,18 +152,30 @@ class _BioDataPageState extends State<BioDataPage>
     setState(() {
       _selectedDistrict = null;
       _selectedThana = null;
-      _selectedPermanentDistrict = null;
-      _selectedPermanentThana = null;
 
       for (var element in divDisThanaList) {
         if (element.division == _selectedDivision) {
           dis.add(element.district.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
-        } else if (element.division == _selectedPermanentDivision) {
+        }
+        districtList = divresult;
+      }
+    });
+  }
+
+  setDistrictAsDivision2() {
+    List dis = [];
+    List<String> divresult = [];
+    setState(() {
+      _selectedPermanentDistrict = null;
+      _selectedPermanentThana = null;
+
+      for (var element in divDisThanaList) {
+        if (element.division == _selectedPermanentDivision) {
           dis.add(element.district.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
         }
-        districtList = divresult;
+        districtList2 = divresult;
       }
     });
   }
@@ -142,16 +185,28 @@ class _BioDataPageState extends State<BioDataPage>
     List<String> divresult = [];
     setState(() {
       _selectedThana = null;
-      _selectedPermanentThana = null;
+
       for (var element in divDisThanaList) {
         if (element.district == _selectedDistrict) {
           dis.add(element.upazila.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
-        } else if (element.district == _selectedPermanentDistrict) {
+        }
+        thanaList = divresult;
+      }
+    });
+  }
+
+  setThanaAsDivisionNDistrict2() {
+    List dis = [];
+    List<String> divresult = [];
+    setState(() {
+      _selectedPermanentThana = null;
+      for (var element in divDisThanaList) {
+        if (element.district == _selectedPermanentDistrict) {
           dis.add(element.upazila.toString());
           divresult = LinkedHashSet<String>.from(dis).toList();
         }
-        thanaList = divresult;
+        thanaList2 = divresult;
       }
     });
   }
@@ -221,6 +276,7 @@ class _BioDataPageState extends State<BioDataPage>
                         child: GestureDetector(
                           onTap: () {
                             _selectedDivision = divisonList[index];
+
                             setDistrictAsDivision();
 
                             setState(() {
@@ -261,7 +317,7 @@ class _BioDataPageState extends State<BioDataPage>
 
   Widget permanentDivision() {
     return SizeTransition(
-      sizeFactor: divisonAnimation,
+      sizeFactor: permanentDivisonAnimation,
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
@@ -283,12 +339,12 @@ class _BioDataPageState extends State<BioDataPage>
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          divisonAnimationController.reverse();
+                          permanentDivisonAnimationController.reverse();
                         });
                         Future.delayed(const Duration(milliseconds: 400), () {
                           setState(() {
-                            isCountry = true;
-                            animationController.forward();
+                            isPermanentCountry = true;
+                            animationController2.forward();
                           });
                         });
                       },
@@ -315,7 +371,7 @@ class _BioDataPageState extends State<BioDataPage>
                   height: 10,
                 ),
                 ListView.builder(
-                    itemCount: divisonList.length,
+                    itemCount: divisonList2.length,
                     shrinkWrap: true,
                     physics: const ScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -323,18 +379,18 @@ class _BioDataPageState extends State<BioDataPage>
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: GestureDetector(
                           onTap: () {
-                            _selectedPermanentDivision = divisonList[index];
-                            setDistrictAsDivision();
+                            _selectedPermanentDivision = divisonList2[index];
+                            setDistrictAsDivision2();
 
                             setState(() {
-                              divisonAnimationController.reverse();
+                              permanentDivisonAnimationController.reverse();
                             });
                             Future.delayed(const Duration(milliseconds: 400),
                                 () {
                               setState(() {
-                                isDivision = false;
-                                isZilla = true;
-                                zillaAnimationController.forward();
+                                isPermanentDivision = false;
+                                isPermanentZilla = true;
+                                permanentZillaAnimationController.forward();
                               });
                             });
                           },
@@ -342,7 +398,7 @@ class _BioDataPageState extends State<BioDataPage>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                divisonList[index],
+                                divisonList2[index],
                                 style: const TextTheme().bodyMedium,
                               ),
                               const Icon(
@@ -429,6 +485,7 @@ class _BioDataPageState extends State<BioDataPage>
                           child: GestureDetector(
                             onTap: () {
                               _selectedDistrict = districtList[index];
+
                               setThanaAsDivisionNDistrict();
                               setState(() {
                                 zillaAnimationController.reverse();
@@ -469,7 +526,7 @@ class _BioDataPageState extends State<BioDataPage>
 
   Widget permanentZilla() {
     return SizeTransition(
-      sizeFactor: zillaAnimation,
+      sizeFactor: permanentZillaAnimation,
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
@@ -492,12 +549,12 @@ class _BioDataPageState extends State<BioDataPage>
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            zillaAnimationController.reverse();
+                            permanentZillaAnimationController.reverse();
                           });
                           Future.delayed(const Duration(milliseconds: 400), () {
                             setState(() {
-                              isDivision = true;
-                              divisonAnimationController.forward();
+                              isPermanentDivision = true;
+                              permanentDivisonAnimationController.forward();
                             });
                           });
                         },
@@ -524,7 +581,7 @@ class _BioDataPageState extends State<BioDataPage>
                     height: 10,
                   ),
                   ListView.builder(
-                      itemCount: districtList.length,
+                      itemCount: districtList2.length,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       physics: const ScrollPhysics(),
@@ -533,17 +590,18 @@ class _BioDataPageState extends State<BioDataPage>
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: GestureDetector(
                             onTap: () {
-                              _selectedPermanentDistrict = districtList[index];
-                              setThanaAsDivisionNDistrict();
+                              _selectedPermanentDistrict = districtList2[index];
+                              setThanaAsDivisionNDistrict2();
                               setState(() {
-                                zillaAnimationController.reverse();
+                                permanentZillaAnimationController.reverse();
                               });
                               Future.delayed(const Duration(milliseconds: 400),
                                   () {
                                 setState(() {
-                                  isZilla = false;
-                                  isUpoZilla = true;
-                                  upoZillaAnimationController.forward();
+                                  isPermanentZilla = false;
+                                  isPermanentUpoZilla = true;
+                                  permanentUpoZillaAnimationController
+                                      .forward();
                                 });
                               });
                             },
@@ -551,7 +609,7 @@ class _BioDataPageState extends State<BioDataPage>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  districtList[index],
+                                  districtList2[index],
                                   style: const TextTheme().bodyMedium,
                                 ),
                                 const Icon(
@@ -678,7 +736,7 @@ class _BioDataPageState extends State<BioDataPage>
 
   Widget permanentUpoZilla() {
     return SizeTransition(
-      sizeFactor: upoZillaAnimation,
+      sizeFactor: permanentUpoZillaAnimation,
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
@@ -701,12 +759,12 @@ class _BioDataPageState extends State<BioDataPage>
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            upoZillaAnimationController.reverse();
+                            permanentUpoZillaAnimationController.reverse();
                           });
                           Future.delayed(const Duration(milliseconds: 400), () {
                             setState(() {
-                              isZilla = true;
-                              zillaAnimationController.forward();
+                              isPermanentZilla = true;
+                              permanentZillaAnimationController.forward();
                             });
                           });
                         },
@@ -733,7 +791,7 @@ class _BioDataPageState extends State<BioDataPage>
                     height: 10,
                   ),
                   ListView.builder(
-                      itemCount: thanaList.length,
+                      itemCount: thanaList2.length,
                       physics: const ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
@@ -742,7 +800,7 @@ class _BioDataPageState extends State<BioDataPage>
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: GestureDetector(
                             onTap: () {
-                              _selectedPermanentThana = thanaList[index];
+                              _selectedPermanentThana = thanaList2[index];
                               setState(() {
                                 upoZillaAnimationController.reverse();
                               });
@@ -750,8 +808,8 @@ class _BioDataPageState extends State<BioDataPage>
                               Future.delayed(const Duration(milliseconds: 400),
                                   () {
                                 setState(() {
-                                  isUpoZilla = false;
-                                  isButtonShow = true;
+                                  isPermanentUpoZilla = false;
+                                  isPermanentButtonShow = true;
                                 });
                               });
                             },
@@ -759,7 +817,7 @@ class _BioDataPageState extends State<BioDataPage>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  thanaList[index],
+                                  thanaList2[index],
                                   style: const TextTheme().bodyMedium,
                                 ),
                                 const Icon(
@@ -877,6 +935,103 @@ class _BioDataPageState extends State<BioDataPage>
     );
   }
 
+  Widget permanentCountry() {
+    return SizeTransition(
+      sizeFactor: animation2,
+      axis: Axis.vertical,
+      axisAlignment: 10.0,
+      child: Card(
+        shadowColor: Colors.grey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        elevation: 1,
+        color: Colors.white,
+        child: Container(
+          height: 300,
+          width: double.infinity,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "দেশ নির্বাচন করুন",
+                      style: const TextTheme().bodyLarge,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          animationController2.reverse();
+                        });
+                        Future.delayed(const Duration(milliseconds: 400), () {
+                          setState(() {
+                            isPermanentButtonShow = true;
+                            print(isPermanentButtonShow);
+                          });
+                        });
+                      },
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Divider(
+                  color: Colors.black,
+                  height: 0.8,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      animationController2.reverse();
+                    });
+                    Future.delayed(Duration(milliseconds: 400), () {
+                      setState(() {
+                        isPermanentCountry = false;
+                        isPermanentDivision = true;
+
+                        permanentDivisonAnimationController.forward();
+                      });
+                    });
+                  },
+                  child: ListView.builder(
+                      itemCount: countryList.length,
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              countryList[index],
+                              style: const TextTheme().bodyMedium,
+                            ),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                            ),
+                          ],
+                        );
+                      }),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   // Widget graytext(String title) {
   //   return Text(
   //     title,
@@ -945,7 +1100,6 @@ class _BioDataPageState extends State<BioDataPage>
             setState(() {
               selected = value!;
               // ss(selected);
-              print(selected);
             });
           },
           items: list.map<DropdownMenuItem<String>>((String value) {
@@ -953,10 +1107,100 @@ class _BioDataPageState extends State<BioDataPage>
               value: value,
               child: Text(
                 value,
-                style: GoogleFonts.anekBangla(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500),
+                style: const TextTheme().bodyMedium,
+                // style: const TextStyle(
+                //     color: Colors.black,
+                //     fontSize: 16,
+                //     fontWeight: FontWeight.w500),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget educationDropDown(List<String> list) {
+    return DropdownButtonHideUnderline(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
+        ),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5)),
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: selectedEducation,
+          icon: const Icon(Icons.arrow_drop_down),
+          iconSize: 30,
+          hint: Text(
+            hintText,
+            style: GoogleFonts.anekBangla(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+            // style: const TextStyle(
+            //     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+
+            setState(() {
+              selectedEducation = value!;
+              // ss(selected);
+            });
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: const TextTheme().bodyMedium,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  String? selectedGeneralEducationHeighestDegree;
+  Widget generalEducationHeighestDropDown(List<String> list) {
+    return DropdownButtonHideUnderline(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 14,
+        ),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5)),
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: selectedGeneralEducationHeighestDegree,
+          icon: const Icon(Icons.arrow_drop_down),
+          iconSize: 30,
+          hint: Text(
+            hintText,
+            style: GoogleFonts.anekBangla(
+                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+            // style: const TextStyle(
+            //     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+
+            setState(() {
+              selectedGeneralEducationHeighestDegree = value!;
+              // ss(selected);
+            });
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                style: const TextTheme().bodyMedium,
                 // style: const TextStyle(
                 //     color: Colors.black,
                 //     fontSize: 16,
@@ -970,6 +1214,8 @@ class _BioDataPageState extends State<BioDataPage>
   }
 
   TextEditingController alakarNameController = TextEditingController();
+  TextEditingController permanentAlakarNameController = TextEditingController();
+  TextEditingController boroHowaAlakaController = TextEditingController();
 
   Widget textField() {
     return Container(
@@ -997,6 +1243,11 @@ class _BioDataPageState extends State<BioDataPage>
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: AppBar(
+              title: Text(
+                'জীবন বৃত্তান্ত ',
+                style: const TextTheme().labelLarge,
+              ),
+              centerTitle: true,
               elevation: 0,
               // backgroundColor: Colors.amberAccent,
               bottom: TabBar(tabs: [
@@ -1008,7 +1259,10 @@ class _BioDataPageState extends State<BioDataPage>
                   "ঠিকানা",
                   style: const TextTheme().bodyMedium,
                 ),
-                Tab(icon: Icon(Icons.camera_alt)),
+                Text(
+                  "শিক্ষা",
+                  style: const TextTheme().bodyMedium,
+                ),
               ]),
             )),
         body: SafeArea(
@@ -1016,9 +1270,242 @@ class _BioDataPageState extends State<BioDataPage>
           children: [
             generalInfo(),
             address(),
-            Text("data"),
+            education(),
           ],
         )),
+      ),
+    );
+  }
+
+  TextEditingController sscDakhilSomomanController = TextEditingController();
+  TextEditingController hscAlimSomomanController = TextEditingController();
+  TextEditingController hounsFazilSomomanController = TextEditingController();
+  TextEditingController instituteName = TextEditingController();
+  TextEditingController graduationYear = TextEditingController();
+  TextEditingController postGraduationDept = TextEditingController();
+  TextEditingController postGraduationDeptInstitute = TextEditingController();
+  TextEditingController postGraduationYear = TextEditingController();
+  TextEditingController phdSubject = TextEditingController();
+  TextEditingController phdInstitute = TextEditingController();
+  TextEditingController phdYear = TextEditingController();
+  TextEditingController otherEducation = TextEditingController();
+  TextEditingController islamicEducationTitle = TextEditingController();
+
+  String? selectedEducationDept;
+  String? selectedSscResult;
+  String? selectHscOrDeploma;
+  Widget education() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            fieldLabel("আপনার শিক্ষা মাধ্যম"),
+            educationDropDown(AppConstants.educationType),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("সর্বোচ্চ শিক্ষাগত যোগ্যতা"),
+            generalEducationHeighestDropDown(AppConstants.generalEduHstDgr),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("এস.এস.সি / দাখিল / সমমান পাসের সন"),
+            CustomTextField(
+              controller: sscDakhilSomomanController,
+              hintText: "2012",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("বিভাগ"),
+            dropDown(AppConstants.educationDept, selectedEducationDept),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ফলাফল"),
+            dropDown(AppConstants.sscResult, selectedSscResult),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("SSC পরে কোন মাধ্যমে পড়াশুনা করেছেন?"),
+            dropDown(['HSC', 'ডিপ্লোমা'], selectHscOrDeploma),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("এইচ.এস.সি / আলিম / সমমান পাসের সন"),
+            CustomTextField(
+              controller: hscAlimSomomanController,
+              hintText: '2014',
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("বিভাগ"),
+            dropDown(AppConstants.educationDept, selectedEducationDept),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ফলাফল"),
+            dropDown(AppConstants.sscResult, selectedSscResult),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("স্নাতক / স্নাতক (সম্মান) / ফাজিল পড়াশোনার বিষয়"),
+            CustomTextField(
+              controller: hounsFazilSomomanController,
+              hintText: "কম্পিউটার বিজ্ঞান ও প্রকৌশল",
+              maxLength: 40,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("শিক্ষাপ্রতিষ্ঠানের নাম "),
+            CustomTextField(
+              controller: instituteName,
+              hintText: "বাংলাদেশ প্রকৌশল বিশ্ববিদ্যালয়",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("পাসের সন"),
+            CustomTextField(
+              controller: graduationYear,
+              hintText: "2018",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("স্নাতকোত্তর / কামিল পড়াশোনার বিষয়"),
+            CustomTextField(
+                controller: postGraduationDept,
+                hintText: "এমএসসি ইন টেক্সটাইল ইঞ্জিনিয়ারিং"),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("শিক্ষাপ্রতিষ্ঠানের নাম"),
+            CustomTextField(
+                controller: postGraduationDeptInstitute,
+                hintText: "বাংলাদেশ টেক্সটাইল বিশ্ববিদ্যালয়"),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("পাসের সন"),
+            CustomTextField(
+              controller: postGraduationYear,
+              hintText: "2020",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ডক্টরেট অধ্যয়নের বিষয়"),
+            CustomTextField(
+              controller: phdSubject,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("শিক্ষাপ্রতিষ্ঠানের নাম"),
+            CustomTextField(
+              controller: phdInstitute,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("পাসের সন"),
+            CustomTextField(
+              controller: phdYear,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "অন্যান্য শিক্ষাগত যোগ্যতা",
+              style: const TextTheme().bodyMedium,
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            CustomTextField(
+              controller: otherEducation,
+              hintText: "",
+              maxLength: 200,
+              maxLines: 5,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "শিক্ষাপ্রতিষ্ঠানের নাম, বিষয়, পাসের সন সহ বিস্তারিত লিখবেন। কিছু না থাকলে ঘরটি ফাঁকা রাখবেন।",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextTheme().bodyMedium,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              "দ্বীনি শিক্ষাগত পদবী সমূহ",
+              style: const TextTheme().bodyMedium,
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+            CustomTextField(
+              controller: islamicEducationTitle,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SubmitButton(
+                    elevation: 2,
+                    borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.deepGrey.withOpacity(0.5),
+                    gradColor2: ColorCodes.deepGrey.withOpacity(0.5),
+                    borderWidth: 0,
+                    text: "বাদ দিন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
+                    fontWeight: FontWeight.w500,
+                    textColor: Colors.white,
+                    textSize: 14,
+                    press: (() => {})),
+                SubmitButton(
+                    elevation: 2,
+                    borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.purpleBlue,
+                    gradColor2: ColorCodes.purpleBlue,
+                    borderWidth: 0,
+                    text: "সেভ করুন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
+                    fontWeight: FontWeight.w500,
+                    textColor: Colors.white,
+                    textSize: 14,
+                    press: (() => {})),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1034,19 +1521,15 @@ class _BioDataPageState extends State<BioDataPage>
             //   height: 10,
             // ),
             fieldLabel("স্থায়ী ঠিকানা"),
-            Stack(
-              children: [
-                isCountry
-                    ? country()
-                    : isDivision
-                        ? division()
-                        : isZilla
-                            ? zilla()
-                            : isUpoZilla
-                                ? upoZilla()
-                                : const Text(""),
-              ],
-            ),
+            isCountry
+                ? country()
+                : isDivision
+                    ? division()
+                    : isZilla
+                        ? zilla()
+                        : isUpoZilla
+                            ? upoZilla()
+                            : const Text(""),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -1089,11 +1572,15 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
-            CustomTextField(
-              controller: alakarNameController,
-              hintText: "এলাকার নাম লিখুন",
-              maxLength: 100,
-            ),
+            (_selectedDistrict != null &&
+                    _selectedDivision != null &&
+                    _selectedThana != null)
+                ? CustomTextField(
+                    controller: alakarNameController,
+                    hintText: "এলাকার নাম লিখুন",
+                    maxLength: 100,
+                  )
+                : const Text(''),
             const SizedBox(
               height: 10,
             ),
@@ -1153,57 +1640,128 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
-            Stack(
-              children: [
-                isCountry
-                    ? country()
-                    : isDivision
-                        ? division()
-                        : isZilla
-                            ? zilla()
-                            : isUpoZilla
-                                ? upoZilla()
-                                : const Text(""),
-              ],
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  isPermanentButtonShow = false;
-                  isPermanentCountry = true;
-                  animationController.forward();
-                });
-              },
-              child: isButtonShow
-                  ? Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: ColorCodes.deepGrey.withOpacity(0.5),
-                              width: 0.5)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              (_selectedDistrict == null ||
-                                      _selectedDivision == null ||
-                                      _selectedThana == null)
-                                  ? "ঠিকানা নির্বাচন করুন"
-                                  : _selectedDistrict == _selectedDivision
-                                      ? "$_selectedThana, $_selectedDistrict"
-                                      : "$_selectedThana, $_selectedDistrict, $_selectedDivision  ",
-                              style: const TextTheme().bodyMedium,
+            isPermanentCountry
+                ? permanentCountry()
+                : isPermanentDivision
+                    ? permanentDivision()
+                    : isPermanentZilla
+                        ? permanentZilla()
+                        : isPermanentUpoZilla
+                            ? permanentUpoZilla()
+                            : const Text(""),
+            isSameAddress
+                ? const Text('')
+                : GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPermanentButtonShow = false;
+                        isPermanentCountry = true;
+                        animationController2.forward();
+                      });
+                    },
+                    child: isPermanentButtonShow
+                        ? Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: ColorCodes.deepGrey.withOpacity(0.5),
+                                    width: 0.5)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    (_selectedPermanentDistrict == null ||
+                                            _selectedPermanentDivision ==
+                                                null ||
+                                            _selectedPermanentThana == null)
+                                        ? "ঠিকানা নির্বাচন করুন"
+                                        : _selectedPermanentDistrict ==
+                                                _selectedPermanentDivision
+                                            ? "$_selectedPermanentThana, $_selectedPermanentDistrict"
+                                            : "$_selectedPermanentThana, $_selectedPermanentDistrict, $_selectedPermanentDivision  ",
+                                    style: const TextTheme().bodyMedium,
+                                  ),
+                                  const Icon(Icons.arrow_drop_down),
+                                ],
+                              ),
                             ),
-                            const Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
-                      ),
-                    )
-                  : const Text(''),
+                          )
+                        : const Text(''),
+                  ),
+            SizedBox(
+              height: isSameAddress ? 0 : 10,
+            ),
+            (_selectedPermanentDistrict != null &&
+                    _selectedPermanentDivision != null &&
+                    _selectedPermanentThana != null &&
+                    isSameAddress == false)
+                ? CustomTextField(
+                    controller: permanentAlakarNameController,
+                    hintText: "এলাকার নাম লিখুন",
+                    maxLength: 100,
+                  )
+                : const Text(''),
+            SizedBox(
+              height: isSameAddress ? 0 : 10,
+            ),
+            isSameAddress
+                ? const Text('')
+                : Text(
+                    "বাসার নাম্বার না লিখে শুধু এলাকার নাম লিখুন। যেমন- মিরপুর ১০, বাঘমারা।",
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextTheme().bodyLarge,
+                  ),
+            SizedBox(
+              height: isSameAddress ? 0 : 10,
+            ),
+            fieldLabel("কোথায় বড় হয়েছেন?"),
+            CustomTextField(
+              controller: boroHowaAlakaController,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SubmitButton(
+                    elevation: 2,
+                    borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.deepGrey.withOpacity(0.5),
+                    gradColor2: ColorCodes.deepGrey.withOpacity(0.5),
+                    borderWidth: 0,
+                    text: "বাদ দিন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
+                    fontWeight: FontWeight.w500,
+                    textColor: Colors.white,
+                    textSize: 14,
+                    press: (() => {})),
+                SubmitButton(
+                    elevation: 2,
+                    borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.purpleBlue,
+                    gradColor2: ColorCodes.purpleBlue,
+                    borderWidth: 0,
+                    text: "সেভ করুন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
+                    fontWeight: FontWeight.w500,
+                    textColor: Colors.white,
+                    textSize: 14,
+                    press: (() => {})),
+              ],
             ),
           ],
         ),
@@ -1218,21 +1776,6 @@ class _BioDataPageState extends State<BioDataPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Next: ঠিকানা",
-              style: const TextTheme().bodyMedium,
-            ),
-            // graytext("Next: ঠিকানা"),
-            const SizedBox(
-              height: 10,
-            ),
-            const Divider(
-              height: 0.5,
-              color: Colors.grey,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
             fieldLabel("বায়োডাটার ধরন"),
             dropDown(AppConstants.bioDataType, selectedBioDataType),
             const SizedBox(
@@ -1277,40 +1820,35 @@ class _BioDataPageState extends State<BioDataPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SubmitButton(
-                    color: Colors.grey,
-                    elevation: 0,
+                    elevation: 2,
                     borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.deepGrey.withOpacity(0.5),
+                    gradColor2: ColorCodes.deepGrey.withOpacity(0.5),
                     borderWidth: 0,
-                    text: "Back",
-                    buttonRadius: 10,
-                    height: 50,
-                    width: 100,
+                    text: "বাদ দিন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
-                    textSize: 16,
-                    press: () {}),
+                    textSize: 14,
+                    press: (() => {})),
                 SubmitButton(
-                    elevation: 0,
+                    elevation: 2,
                     borderColor: Colors.transparent,
+                    gradColor1: ColorCodes.purpleBlue,
+                    gradColor2: ColorCodes.purpleBlue,
                     borderWidth: 0,
-                    text: "Save & Next",
-                    buttonRadius: 10,
-                    height: 50,
-                    width: 100,
+                    text: "সেভ করুন",
+                    buttonRadius: 8,
+                    height: 40,
+                    width: 140,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
-                    textSize: 16,
-                    press: () {}),
+                    textSize: 14,
+                    press: (() => {})),
               ],
-            )
-            // SubmitButton(
-            //   width: 100,
-            //   press: () {},
-            //   text: "Save & Next",
-            //   textColor: Colors.white,
-            //   color: Colors.purpleAccent,
-            //   borderColor: Colors.transparent,
-            // )
+            ),
           ],
         ),
       ),
