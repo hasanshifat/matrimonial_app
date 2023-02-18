@@ -7,6 +7,7 @@ import 'package:matrimonial_app/Homepage/pages/navigation_bar_page.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import 'package:matrimonial_app/Login/Provider/user.dart';
 import 'package:provider/provider.dart';
+import 'Biodata Request/Provider/pending_request_prv.dart';
 import 'Short Listed/Hive/short_listed_class.dart';
 import 'Utils/color_codes.dart';
 import 'Utils/page_router.dart';
@@ -20,6 +21,9 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => PendingBiodataPrv(),
     )
   ], child: const MyApp()));
 }
