@@ -45,6 +45,8 @@ class _NavBarPageState extends State<NavBarPage> {
       return name = 'প্রিয় তালিকা';
     } else if (isRequestActive) {
       return name = 'অনুরোধের তালিকা';
+    } else if (isBiodataActive) {
+      return name = 'জীবন বৃত্তান্ত';
     } else if (isProfileActive) {
       return name = 'প্রোফাইল';
     }

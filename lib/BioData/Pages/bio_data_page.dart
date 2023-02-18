@@ -6,6 +6,7 @@ import 'package:matrimonial_app/BioData/Pages/family_info_page.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
+import 'package:matrimonial_app/Utils/other_utils.dart';
 
 import '../../Homepage/Services/district_service.dart';
 import '../../Homepage/model/district_model.dart';
@@ -150,6 +151,7 @@ class _BioDataPageState extends State<BioDataPage>
   setDistrictAsDivision() {
     List dis = [];
     List<String> divresult = [];
+    print('setDistrictAsDivision');
     setState(() {
       _selectedDistrict = null;
       _selectedThana = null;
@@ -218,20 +220,22 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     GestureDetector(
                       onTap: () {
@@ -247,9 +251,12 @@ class _BioDataPageState extends State<BioDataPage>
                       },
                       child: const Icon(
                         Icons.arrow_back,
-                        color: Colors.grey,
+                        color: ColorCodes.deepGrey,
                         size: 20,
                       ),
+                    ),
+                    const SizedBox(
+                      width: 10,
                     ),
                     Text(
                       "একটি বিভাগ নির্বাচন করুন",
@@ -257,32 +264,30 @@ class _BioDataPageState extends State<BioDataPage>
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                OtherUtils.height10,
                 const Divider(
                   color: Colors.black,
                   height: 0.8,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                OtherUtils.height10,
                 ListView.builder(
                     itemCount: divisonList.length,
                     shrinkWrap: true,
-                    physics: const ScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: GestureDetector(
                           onTap: () {
-                            _selectedDivision = divisonList[index];
-
-                            setDistrictAsDivision();
-
                             setState(() {
+                              _selectedDivision = divisonList[index];
+                              print(_selectedDivision);
+                              print(divisonList[index]);
+
+                              setDistrictAsDivision();
                               divisonAnimationController.reverse();
                             });
+
                             Future.delayed(const Duration(milliseconds: 400),
                                 () {
                               setState(() {
@@ -302,6 +307,7 @@ class _BioDataPageState extends State<BioDataPage>
                               const Icon(
                                 Icons.arrow_forward_ios,
                                 size: 16,
+                                color: ColorCodes.deepGrey,
                               ),
                             ],
                           ),
@@ -322,14 +328,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 1,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -425,14 +433,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -455,10 +465,11 @@ class _BioDataPageState extends State<BioDataPage>
                         },
                         child: const Icon(
                           Icons.arrow_back,
-                          color: Colors.grey,
+                          color: ColorCodes.deepGrey,
                           size: 20,
                         ),
                       ),
+                      OtherUtils.width10,
                       Text(
                         "একটি জেলা নির্বাচন করুন",
                         style: const TextTheme().bodyLarge,
@@ -479,7 +490,7 @@ class _BioDataPageState extends State<BioDataPage>
                       itemCount: districtList.length,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      physics: const ScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -507,9 +518,11 @@ class _BioDataPageState extends State<BioDataPage>
                                   districtList[index],
                                   style: const TextTheme().bodyMedium,
                                 ),
+                                OtherUtils.width10,
                                 const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 16,
+                                  color: ColorCodes.deepGrey,
                                 ),
                               ],
                             ),
@@ -531,14 +544,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 1,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -637,14 +652,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -667,10 +684,11 @@ class _BioDataPageState extends State<BioDataPage>
                         },
                         child: const Icon(
                           Icons.arrow_back,
-                          color: Colors.grey,
+                          color: ColorCodes.deepGrey,
                           size: 20,
                         ),
                       ),
+                      OtherUtils.width10,
                       Text(
                         "একটি উপজেলা নির্বাচন করুন",
                         style: const TextTheme().bodyLarge,
@@ -689,7 +707,7 @@ class _BioDataPageState extends State<BioDataPage>
                   ),
                   ListView.builder(
                       itemCount: thanaList.length,
-                      physics: const ScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
@@ -711,15 +729,17 @@ class _BioDataPageState extends State<BioDataPage>
                               });
                             },
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
                                   thanaList[index],
                                   style: const TextTheme().bodyMedium,
                                 ),
+                                OtherUtils.width10,
                                 const Icon(
                                   Icons.arrow_forward_ios,
                                   size: 16,
+                                  color: ColorCodes.deepGrey,
                                 ),
                               ],
                             ),
@@ -742,13 +762,16 @@ class _BioDataPageState extends State<BioDataPage>
       axisAlignment: 0.0,
       child: Card(
         shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 1,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -845,14 +868,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 0.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -878,28 +903,24 @@ class _BioDataPageState extends State<BioDataPage>
                       },
                       child: const Icon(
                         Icons.close,
-                        color: Colors.grey,
+                        color: ColorCodes.deepGrey,
                         size: 20,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                OtherUtils.height10,
                 const Divider(
                   color: Colors.black,
                   height: 0.8,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                OtherUtils.height10,
                 GestureDetector(
                   onTap: () {
                     setState(() {
                       animationController.reverse();
                     });
-                    Future.delayed(Duration(milliseconds: 400), () {
+                    Future.delayed(const Duration(milliseconds: 400), () {
                       setState(() {
                         isCountry = false;
                         isDivision = true;
@@ -911,7 +932,7 @@ class _BioDataPageState extends State<BioDataPage>
                   child: ListView.builder(
                       itemCount: countryList.length,
                       shrinkWrap: true,
-                      physics: ScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -920,9 +941,11 @@ class _BioDataPageState extends State<BioDataPage>
                               countryList[index],
                               style: const TextTheme().bodyMedium,
                             ),
+                            OtherUtils.width10,
                             const Icon(
                               Icons.arrow_forward_ios,
                               size: 16,
+                              color: ColorCodes.deepGrey,
                             ),
                           ],
                         );
@@ -942,14 +965,16 @@ class _BioDataPageState extends State<BioDataPage>
       axis: Axis.vertical,
       axisAlignment: 10.0,
       child: Card(
-        shadowColor: Colors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 1,
         color: Colors.white,
         child: Container(
           height: 300,
           width: double.infinity,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -996,7 +1021,7 @@ class _BioDataPageState extends State<BioDataPage>
                     setState(() {
                       animationController2.reverse();
                     });
-                    Future.delayed(Duration(milliseconds: 400), () {
+                    Future.delayed(const Duration(milliseconds: 400), () {
                       setState(() {
                         isPermanentCountry = false;
                         isPermanentDivision = true;
@@ -1008,7 +1033,7 @@ class _BioDataPageState extends State<BioDataPage>
                   child: ListView.builder(
                       itemCount: countryList.length,
                       shrinkWrap: true,
-                      physics: ScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1057,7 +1082,7 @@ class _BioDataPageState extends State<BioDataPage>
           children: const [
             Icon(
               Icons.star,
-              color: Colors.redAccent,
+              color: ColorCodes.deepRed,
               size: 12,
             ),
             SizedBox(
@@ -1088,6 +1113,8 @@ class _BioDataPageState extends State<BioDataPage>
           value: selected,
           icon: const Icon(Icons.arrow_drop_down),
           iconSize: 30,
+          elevation: 6,
+          borderRadius: BorderRadius.circular(10),
           hint: Text(
             hintText,
             style: GoogleFonts.anekBangla(
@@ -1109,7 +1136,10 @@ class _BioDataPageState extends State<BioDataPage>
               value: value,
               child: Text(
                 value,
-                style: const TextTheme().bodyMedium,
+                style: GoogleFonts.anekBangla(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
                 // style: const TextStyle(
                 //     color: Colors.black,
                 //     fontSize: 16,
@@ -1237,39 +1267,39 @@ class _BioDataPageState extends State<BioDataPage>
     );
   }
 
+  Size? pageSize;
+
   @override
   Widget build(BuildContext context) {
+    pageSize = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 4,
       child: Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
             child: AppBar(
-              title: Text(
-                'জীবন বৃত্তান্ত ',
-                style: const TextTheme().labelLarge,
-              ),
-              centerTitle: true,
               elevation: 0,
               // backgroundColor: Colors.amberAccent,
-              bottom: TabBar(isScrollable: true, tabs: [
-                Text(
-                  "সাধারণ তথ্য",
-                  style: const TextTheme().bodyMedium,
-                ),
-                Text(
-                  "ঠিকানা",
-                  style: const TextTheme().bodyMedium,
-                ),
-                Text(
-                  "শিক্ষা",
-                  style: const TextTheme().bodyMedium,
-                ),
-                Text(
-                  "পারিবারিক তথ্য",
-                  style: const TextTheme().bodyMedium,
-                ),
-              ]),
+              bottom: TabBar(
+                  indicatorColor: ColorCodes.primaryPink,
+                  isScrollable: true,
+                  labelColor: ColorCodes.deepGrey,
+                  labelStyle: tabBarLebelTextStyle(),
+                  unselectedLabelStyle: unselectedLabelStyle(),
+                  tabs: const [
+                    Text(
+                      "সাধারণ তথ্য",
+                    ),
+                    Text(
+                      "ঠিকানা",
+                    ),
+                    Text(
+                      "শিক্ষা",
+                    ),
+                    Text(
+                      "পারিবারিক তথ্য",
+                    ),
+                  ]),
             )),
         body: SafeArea(
             child: TabBarView(
@@ -1282,6 +1312,18 @@ class _BioDataPageState extends State<BioDataPage>
         )),
       ),
     );
+  }
+
+  TextStyle unselectedLabelStyle() {
+    return GoogleFonts.anekBangla(
+        fontWeight: FontWeight.w500,
+        fontSize: 16,
+        color: ColorCodes.deepGrey.withOpacity(0.5));
+  }
+
+  TextStyle tabBarLebelTextStyle() {
+    return GoogleFonts.anekBangla(
+        fontWeight: FontWeight.w500, fontSize: 16, color: ColorCodes.deepGrey);
   }
 
   TextEditingController sscDakhilSomomanController = TextEditingController();
@@ -1669,7 +1711,7 @@ class _BioDataPageState extends State<BioDataPage>
               height: 10,
             ),
             Text(
-              "বাসার নাম্বার না লিখে শুধু এলাকার নাম লিখুন। যেমন- মিরপুর ১০, বাঘমারা।",
+              "বাসার নাম্বার না লিখে শুধু এলাকার নাম লিখুন। যেমন- মিরপুর ১০, ঢাকা",
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextTheme().bodyLarge,
@@ -1683,37 +1725,17 @@ class _BioDataPageState extends State<BioDataPage>
             ),
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
+                Checkbox(
+                  checkColor: Colors.white,
+                  fillColor: MaterialStateProperty.all(ColorCodes.purpleBlue),
+                  value: isSameAddress,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  onChanged: (bool? value) {
                     setState(() {
                       isSameAddress = !isSameAddress;
                     });
                   },
-                  child: Container(
-                      height: 20,
-                      width: 20,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          width: 1,
-                          color: ColorCodes.deepGrey,
-                        ),
-                        color: isSameAddress == false
-                            ? Colors.white
-                            : ColorCodes.deepGrey,
-                      ),
-                      child: Center(
-                        child: isSameAddress
-                            ? const Icon(
-                                Icons.done,
-                                color: Colors.white,
-                                size: 14,
-                              )
-                            : const Text(""),
-                      )),
-                ),
-                const SizedBox(
-                  width: 10,
                 ),
                 Text(
                   "স্থায়ী ও বর্তমান ঠিকানা একই",
@@ -1721,9 +1743,7 @@ class _BioDataPageState extends State<BioDataPage>
                 )
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            isSameAddress ? const SizedBox() : OtherUtils.height10,
             isPermanentCountry
                 ? permanentCountry()
                 : isPermanentDivision
@@ -1732,9 +1752,9 @@ class _BioDataPageState extends State<BioDataPage>
                         ? permanentZilla()
                         : isPermanentUpoZilla
                             ? permanentUpoZilla()
-                            : const Text(""),
+                            : const SizedBox(),
             isSameAddress
-                ? const Text('')
+                ? const SizedBox()
                 : GestureDetector(
                     onTap: () {
                       setState(() {
@@ -1777,9 +1797,7 @@ class _BioDataPageState extends State<BioDataPage>
                           )
                         : const Text(''),
                   ),
-            SizedBox(
-              height: isSameAddress ? 0 : 10,
-            ),
+            isSameAddress ? const SizedBox() : OtherUtils.height10,
             (_selectedPermanentDistrict != null &&
                     _selectedPermanentDivision != null &&
                     _selectedPermanentThana != null &&
@@ -1790,13 +1808,11 @@ class _BioDataPageState extends State<BioDataPage>
                     maxLength: 100,
                   )
                 : const Text(''),
-            SizedBox(
-              height: isSameAddress ? 0 : 10,
-            ),
+            isSameAddress ? const SizedBox() : OtherUtils.height10,
             isSameAddress
-                ? const Text('')
+                ? const SizedBox()
                 : Text(
-                    "বাসার নাম্বার না লিখে শুধু এলাকার নাম লিখুন। যেমন- মিরপুর ১০, বাঘমারা।",
+                    "বাসার নাম্বার না লিখে শুধু এলাকার নাম লিখুন। যেমন- মিরপুর ১০, ঢাকা",
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextTheme().bodyLarge,
@@ -1807,7 +1823,7 @@ class _BioDataPageState extends State<BioDataPage>
             fieldLabel("কোথায় বড় হয়েছেন?"),
             CustomTextField(
               controller: boroHowaAlakaController,
-              hintText: "",
+              hintText: "ঢাকা",
               maxLength: 100,
             ),
             const SizedBox(
@@ -1826,7 +1842,7 @@ class _BioDataPageState extends State<BioDataPage>
                     text: "বাদ দিন",
                     buttonRadius: 8,
                     height: 40,
-                    width: 140,
+                    width: pageSize!.width * 0.45,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
                     textSize: 14,
@@ -1840,7 +1856,7 @@ class _BioDataPageState extends State<BioDataPage>
                     text: "সেভ করুন",
                     buttonRadius: 8,
                     height: 40,
-                    width: 140,
+                    width: pageSize!.width * 0.45,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
                     textSize: 14,
@@ -1912,7 +1928,7 @@ class _BioDataPageState extends State<BioDataPage>
                     text: "বাদ দিন",
                     buttonRadius: 8,
                     height: 40,
-                    width: 140,
+                    width: pageSize!.width * 0.45,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
                     textSize: 14,
@@ -1926,7 +1942,7 @@ class _BioDataPageState extends State<BioDataPage>
                     text: "সেভ করুন",
                     buttonRadius: 8,
                     height: 40,
-                    width: 140,
+                    width: pageSize!.width * 0.45,
                     fontWeight: FontWeight.w500,
                     textColor: Colors.white,
                     textSize: 14,
