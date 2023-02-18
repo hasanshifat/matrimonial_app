@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matrimonial_app/Common%20UI/loading_diaalogs.dart';
+import 'package:matrimonial_app/Short%20Listed/Services/short_listed_service.dart';
+import 'package:matrimonial_app/Utils/date_formation.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../Common UI/outline_button.dart';
 import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
+import '../../Utils/snackbars.dart';
 
 class ShortListDetailsPage extends StatefulWidget {
   static const String routeName = '/shortListDetailsPage';
@@ -18,6 +22,8 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
   Size? pageSize;
   bool isLoading = false;
   bool isRead = false;
+  var date = DateTime.now();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     delayed();
@@ -36,6 +42,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
   Widget build(BuildContext context) {
     pageSize = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'বিস্তারিত',
@@ -166,24 +173,29 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                     ),
                   ),
                 )),
-      bottomNavigationBar: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        child: SubmitButton(
-            elevation: 0,
-            borderColor: Colors.transparent,
-            gradColor1: ColorCodes.softGreen,
-            gradColor2: ColorCodes.softGreen,
-            borderWidth: 0,
-            text: "যোগাযোগের জন্য অনুরোধ পাঠান",
-            buttonRadius: 8,
-            height: 40,
-            width: double.infinity,
-            fontWeight: FontWeight.w500,
-            textColor: Colors.white,
-            textSize: 16,
-            press: () => requestConfirmationDialog(context)),
-      )),
+      bottomNavigationBar: !isLoading
+          ? const SizedBox()
+          : SafeArea(
+              child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+              child: SubmitButton(
+                  elevation: 0,
+                  borderColor: Colors.transparent,
+                  gradColor1: ColorCodes.softGreen,
+                  gradColor2: ColorCodes.softGreen,
+                  borderWidth: 0,
+                  text: "যোগাযোগের জন্য অনুরোধ পাঠান",
+                  buttonRadius: 8,
+                  height: 40,
+                  width: double.infinity,
+                  fontWeight: FontWeight.w500,
+                  textColor: Colors.white,
+                  textSize: 16,
+                  press: () => {
+                        requestConfirmationDialog(context),
+                        setState((() => isRead = false))
+                      }),
+            )),
     );
   }
 
@@ -390,7 +402,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
         ]);
   }
 
-  requestConfirmationDialog(BuildContext context) {
+  requestConfirmationDialog(BuildContext dialogContext) {
     return showDialog(
         context: context,
         builder: ((context) => StatefulBuilder(
@@ -478,7 +490,38 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                                       ? Colors.grey
                                       : ColorCodes.deepGreen,
                                   textSize: 14,
-                                  press: isRead ? null : (() => null)),
+                                  press: !isRead
+                                      ? null
+                                      : (() async {
+                                          Navigator.pop(context);
+                                          String? nowDate;
+                                          await DateFormation()
+                                              .dateFormat(
+                                                  context, date.toString())
+                                              .then((value) => setState(() {
+                                                    nowDate = value.toString();
+                                                  }));
+                                          // ignore: use_build_context_synchronously
+                                          CustomLoadingDialogs
+                                              .circleProgressLoading(
+                                                  dialogContext);
+
+                                          Map<String, String> data = {
+                                            "biodata_no": '199',
+                                            "sender_id": '1714312854',
+                                            "receiver_id": '3128',
+                                            "status": 'P',
+                                            "send_time":
+                                                '${nowDate}T${date.hour}:${date.minute}:${date.second}Z'
+                                          };
+
+                                          // ignore: use_build_context_synchronously
+                                          await ShortlistService()
+                                              .sendRequestService(
+                                                  dialogContext, data);
+                                          navPop();
+                                          // ignore: use_build_context_synchronously
+                                        })),
                               OutLineButton(
                                   elevation: 2,
                                   borderColor:
@@ -500,5 +543,9 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                     ),
                   ),
                 )))));
+  }
+
+  navPop() {
+    Navigator.of(context).pop();
   }
 }
