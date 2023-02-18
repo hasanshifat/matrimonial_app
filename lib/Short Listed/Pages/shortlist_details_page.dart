@@ -309,10 +309,11 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
 
   BorderSide tableBorderDesign() {
     return BorderSide(
-        width: 0.5,
-        color: ColorCodes.deepGrey.withOpacity(0.5),
-        style: BorderStyle.solid,
-        strokeAlign: StrokeAlign.outside);
+      width: 0.5,
+      color: ColorCodes.deepGrey.withOpacity(0.5),
+      style: BorderStyle.solid,
+      // strokeAlign: StrokeAlign.outside
+    );
   }
 
   Table basicDetailsTable() {
