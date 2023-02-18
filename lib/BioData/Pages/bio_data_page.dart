@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matrimonial_app/BioData/Pages/family_info_page.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
@@ -32,7 +33,7 @@ class _BioDataPageState extends State<BioDataPage>
   String? selectedEducation;
 
   String hintText = 'নির্বাচন করুন';
-  String? selected;
+  // String? selected;
   bool isGeneralInfo = false;
   bool isSameAddress = false;
 
@@ -1068,11 +1069,11 @@ class _BioDataPageState extends State<BioDataPage>
     );
   }
 
-  String ss(String s) {
-    return s.isEmpty ? s = '' : s;
+  ss(String s) {
+    return s;
   }
 
-  Widget dropDown(List<String> list, selected) {
+  Widget dropDown(List<String> list, String? selected) {
     return DropdownButtonHideUnderline(
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -1099,6 +1100,7 @@ class _BioDataPageState extends State<BioDataPage>
 
             setState(() {
               selected = value!;
+              print(selected);
               // ss(selected);
             });
           },
@@ -1238,7 +1240,7 @@ class _BioDataPageState extends State<BioDataPage>
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
@@ -1250,7 +1252,7 @@ class _BioDataPageState extends State<BioDataPage>
               centerTitle: true,
               elevation: 0,
               // backgroundColor: Colors.amberAccent,
-              bottom: TabBar(tabs: [
+              bottom: TabBar(isScrollable: true, tabs: [
                 Text(
                   "সাধারণ তথ্য",
                   style: const TextTheme().bodyMedium,
@@ -1263,6 +1265,10 @@ class _BioDataPageState extends State<BioDataPage>
                   "শিক্ষা",
                   style: const TextTheme().bodyMedium,
                 ),
+                Text(
+                  "পারিবারিক তথ্য",
+                  style: const TextTheme().bodyMedium,
+                ),
               ]),
             )),
         body: SafeArea(
@@ -1271,6 +1277,7 @@ class _BioDataPageState extends State<BioDataPage>
             generalInfo(),
             address(),
             education(),
+            const FamilyInfo(),
           ],
         )),
       ),
@@ -1282,14 +1289,21 @@ class _BioDataPageState extends State<BioDataPage>
   TextEditingController hounsFazilSomomanController = TextEditingController();
   TextEditingController instituteName = TextEditingController();
   TextEditingController graduationYear = TextEditingController();
+  TextEditingController graduationRuningYear = TextEditingController();
   TextEditingController postGraduationDept = TextEditingController();
   TextEditingController postGraduationDeptInstitute = TextEditingController();
   TextEditingController postGraduationYear = TextEditingController();
+  TextEditingController postGraduationResult = TextEditingController();
+  TextEditingController postGraduationRuningYear = TextEditingController();
   TextEditingController phdSubject = TextEditingController();
   TextEditingController phdInstitute = TextEditingController();
   TextEditingController phdYear = TextEditingController();
   TextEditingController otherEducation = TextEditingController();
   TextEditingController islamicEducationTitle = TextEditingController();
+  TextEditingController schoolName = TextEditingController();
+  TextEditingController hscCollegeName = TextEditingController();
+  TextEditingController dipCollegeName = TextEditingController();
+  TextEditingController graduationResult = TextEditingController();
 
   String? selectedEducationDept;
   String? selectedSscResult;
@@ -1330,6 +1344,15 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
+            fieldLabel("স্কুল/মাদ্রাসা নাম"),
+            CustomTextField(
+              controller: schoolName,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             fieldLabel("SSC পরে কোন মাধ্যমে পড়াশুনা করেছেন?"),
             dropDown(['HSC', 'ডিপ্লোমা'], selectHscOrDeploma),
             const SizedBox(
@@ -1354,6 +1377,39 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
+            fieldLabel("কলেজ/মাদ্রাসা নাম"),
+            CustomTextField(controller: hscCollegeName, hintText: ""),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ডিপ্লোমা পাসের সন"),
+            CustomTextField(
+              controller: sscDakhilSomomanController,
+              hintText: "2012",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("বিভাগ"),
+            dropDown(AppConstants.educationDept, selectedEducationDept),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ফলাফল"),
+            dropDown(AppConstants.sscResult, selectedSscResult),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("শিক্ষাপ্রতিষ্ঠানের নাম"),
+            CustomTextField(
+              controller: dipCollegeName,
+              hintText: "",
+              maxLength: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             fieldLabel("স্নাতক / স্নাতক (সম্মান) / ফাজিল পড়াশোনার বিষয়"),
             CustomTextField(
               controller: hounsFazilSomomanController,
@@ -1372,12 +1428,26 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
+            fieldLabel("চলমান সন"),
+            CustomTextField(
+              controller: graduationRuningYear,
+              hintText: "2017",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             fieldLabel("পাসের সন"),
             CustomTextField(
               controller: graduationYear,
               hintText: "2018",
               maxLength: 4,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ফলাফল"),
+            CustomTextField(controller: graduationResult, hintText: ""),
             const SizedBox(
               height: 10,
             ),
@@ -1395,12 +1465,26 @@ class _BioDataPageState extends State<BioDataPage>
             const SizedBox(
               height: 10,
             ),
+            fieldLabel("চলমান সন"),
+            CustomTextField(
+              controller: postGraduationRuningYear,
+              hintText: "2019",
+              maxLength: 4,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             fieldLabel("পাসের সন"),
             CustomTextField(
               controller: postGraduationYear,
               hintText: "2020",
               maxLength: 4,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            fieldLabel("ফলাফল"),
+            CustomTextField(controller: postGraduationResult, hintText: ""),
             const SizedBox(
               height: 10,
             ),
