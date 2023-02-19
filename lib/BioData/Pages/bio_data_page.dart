@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/BioData/Pages/family_info_page.dart';
+import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
@@ -1877,10 +1878,37 @@ class _BioDataPageState extends State<BioDataPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             fieldLabel("বায়োডাটার ধরন"),
-            dropDown(AppConstants.bioDataType, selectedBioDataType),
-            const SizedBox(
-              height: 10,
+            SizedBox(
+              width: double.infinity,
+              child: CustomDropDownBtn(
+                  selectedID: selectedBioDataType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedBioDataType = value.toString();
+                    });
+                  },
+                  onTap: () {},
+                  hint: hintText,
+                  items: AppConstants.bioDataType
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: GoogleFonts.anekBangla(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                        // style: const TextStyle(
+                        //     color: Colors.black,
+                        //     fontSize: 16,
+                        //     fontWeight: FontWeight.w500),
+                      ),
+                    );
+                  }).toList()),
             ),
+            //dropDown(AppConstants.bioDataType, selectedBioDataType),
+            OtherUtils.height10,
             fieldLabel("বৈবাহিক অবস্থা"),
             dropDown(AppConstants.maritialStatus, selectedMaritialStatus),
             const SizedBox(
