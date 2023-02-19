@@ -40,7 +40,7 @@ class _NavBarPageState extends State<NavBarPage> {
   String appName() {
     String name;
     if (isHomeActive) {
-      return name = 'App Name';
+      return name = 'হোমপেজ';
     } else if (isFavActive) {
       return name = 'প্রিয় তালিকা';
     } else if (isRequestActive) {
