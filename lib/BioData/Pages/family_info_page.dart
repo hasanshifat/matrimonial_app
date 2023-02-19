@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
 
 import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
+import '../../Utils/other_utils.dart';
 
 class FamilyInfo extends StatefulWidget {
   const FamilyInfo({super.key});
@@ -21,7 +23,7 @@ class _FamilyInfoState extends State<FamilyInfo> {
   String? selectedBrothersNum;
   String? selectedSistersNum;
   String? selectedEconomicStatus;
-
+  Size? pageSize;
   TextEditingController fathersOccupation = TextEditingController();
   TextEditingController mothersOccupation = TextEditingController();
   TextEditingController brothersOccupation = TextEditingController();
@@ -57,57 +59,9 @@ class _FamilyInfoState extends State<FamilyInfo> {
     );
   }
 
-  Widget dropDown(List<String> list, String? selected) {
-    return DropdownButtonHideUnderline(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-        ),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5)),
-        child: DropdownButton<String>(
-          isExpanded: true,
-          value: selected,
-          icon: const Icon(Icons.arrow_drop_down),
-          iconSize: 30,
-          hint: Text(
-            hintText,
-            style: GoogleFonts.anekBangla(
-                color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
-            // style: const TextStyle(
-            //     color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          onChanged: (String? value) {
-            // This is called when the user selects an item.
-
-            setState(() {
-              selected = value!;
-
-              // ss(selected);
-            });
-          },
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(
-                value,
-                style: const TextTheme().bodyMedium,
-                // style: const TextStyle(
-                //     color: Colors.black,
-                //     fontSize: 16,
-                //     fontWeight: FontWeight.w500),
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    pageSize = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -116,10 +70,21 @@ class _FamilyInfoState extends State<FamilyInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               fieldLabel("আপনার পিতা কি জীবিত?"),
-              dropDown(['জী, জীবিত', 'না, মৃত'], isFatherAlive),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                width: double.infinity,
+                child: CustomDropDownBtn(
+                    selectedID: isFatherAlive,
+                    onChanged: (value) {
+                      setState(() {
+                        isFatherAlive = value.toString();
+                      });
+                    },
+                    onTap: () {},
+                    hint: hintText,
+                    items: const ['জী, জীবিত', 'না, মৃত']),
               ),
+
+              OtherUtils.height10,
               fieldLabel("পিতার পেশার বিবরণ"),
               CustomTextField(
                 controller: fathersOccupation,
@@ -131,14 +96,23 @@ class _FamilyInfoState extends State<FamilyInfo> {
                 "চাকরীজীবি হলে প্রতিষ্ঠানের ধরণ এবং পদবী, আর ব্যবসায়ী হলে কী ধরণের ব্যবসা করেন/করতেন ইত্যাদি বিস্তারিত লিখবেন।",
                 style: const TextTheme().bodyMedium,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              OtherUtils.height10,
               fieldLabel("আপনার মাতা কি জীবিত?"),
-              dropDown(['জী, জীবিত', 'না, মৃত'], isMotherAlive),
-              const SizedBox(
-                height: 10,
+
+              SizedBox(
+                width: double.infinity,
+                child: CustomDropDownBtn(
+                    selectedID: isMotherAlive,
+                    onChanged: (value) {
+                      setState(() {
+                        isMotherAlive = value.toString();
+                      });
+                    },
+                    onTap: () {},
+                    hint: hintText,
+                    items: const ['জী, জীবিত', 'না, মৃত']),
               ),
+              OtherUtils.height10,
               fieldLabel("মাতার পেশার বিবরণ"),
               CustomTextField(
                 controller: mothersOccupation,
@@ -150,10 +124,21 @@ class _FamilyInfoState extends State<FamilyInfo> {
               //   height: 10,
               // ),
               fieldLabel("আপনার কতজন ভাই আছে?"),
-              dropDown(['নেই', '১', '২', '৩', '8', '৫'], selectedBrothersNum),
-              const SizedBox(
-                height: 10,
+
+              SizedBox(
+                width: double.infinity,
+                child: CustomDropDownBtn(
+                    selectedID: selectedBrothersNum,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedBrothersNum = value.toString();
+                      });
+                    },
+                    onTap: () {},
+                    hint: hintText,
+                    items: const ['নেই', '১', '২', '৩', '8', '৫']),
               ),
+              OtherUtils.height10,
               fieldLabel("ভাইদের তথ্য"),
               CustomTextField(
                 controller: brothersOccupation,
@@ -171,10 +156,22 @@ class _FamilyInfoState extends State<FamilyInfo> {
                 height: 10,
               ),
               fieldLabel("আপনার কতজন বোন আছে?"),
-              dropDown(['নেই', '১', '২', '৩', '8', '৫'], selectedSistersNum),
-              const SizedBox(
-                height: 10,
+              // dropDown(['নেই', '১', '২', '৩', '8', '৫'], selectedSistersNum),
+              SizedBox(
+                width: double.infinity,
+                child: CustomDropDownBtn(
+                    selectedID: selectedSistersNum,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedSistersNum = value.toString();
+                      });
+                    },
+                    onTap: () {},
+                    hint: hintText,
+                    items: const ['নেই', '১', '২', '৩', '8', '৫']),
               ),
+
+              OtherUtils.height10,
               fieldLabel("বোনদের তথ্য"),
               CustomTextField(
                 controller: sistersOccupation,
@@ -188,16 +185,12 @@ class _FamilyInfoState extends State<FamilyInfo> {
                 overflow: TextOverflow.ellipsis,
                 style: const TextTheme().bodyMedium,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              OtherUtils.height10,
               Text(
                 "চাচা মামাদের পেশা",
                 style: const TextTheme().bodyMedium,
               ),
-              const SizedBox(
-                height: 6,
-              ),
+              OtherUtils.height5,
               CustomTextField(
                 controller: unclesOccupation,
                 hintText: "",
@@ -208,10 +201,21 @@ class _FamilyInfoState extends State<FamilyInfo> {
               //   height: 10,
               // ),
               fieldLabel("পারিবারিক অর্থনৈতিক অবস্থা"),
-              dropDown(AppConstants.economicStatus, selectedEconomicStatus),
-              const SizedBox(
-                height: 10,
+              // dropDown(AppConstants.economicStatus, selectedEconomicStatus),
+              SizedBox(
+                width: double.infinity,
+                child: CustomDropDownBtn(
+                    selectedID: selectedEconomicStatus,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedEconomicStatus = value.toString();
+                      });
+                    },
+                    onTap: () {},
+                    hint: hintText,
+                    items: AppConstants.economicStatus),
               ),
+              OtherUtils.height10,
               fieldLabel("অর্থনৈতিক অবস্থার বর্ণনা"),
               CustomTextField(
                 controller: economicDescription,
@@ -226,9 +230,7 @@ class _FamilyInfoState extends State<FamilyInfo> {
                 maxLength: 300,
                 maxLines: 3,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              OtherUtils.height10,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -241,7 +243,7 @@ class _FamilyInfoState extends State<FamilyInfo> {
                       text: "বাদ দিন",
                       buttonRadius: 8,
                       height: 40,
-                      width: 140,
+                      width: pageSize!.width * 0.45,
                       fontWeight: FontWeight.w500,
                       textColor: Colors.white,
                       textSize: 14,
@@ -255,7 +257,7 @@ class _FamilyInfoState extends State<FamilyInfo> {
                       text: "সেভ করুন",
                       buttonRadius: 8,
                       height: 40,
-                      width: 140,
+                      width: pageSize!.width * 0.45,
                       fontWeight: FontWeight.w500,
                       textColor: Colors.white,
                       textSize: 14,
