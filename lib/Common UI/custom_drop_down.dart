@@ -5,7 +5,7 @@ import '../Utils/color_codes.dart';
 
 class CustomDropDownBtn extends StatefulWidget {
   final String hint;
-  final List<DropdownMenuItem<String>>? items;
+  final List<String>? items;
   final String? selectedID;
   final Function(Object?)? onChanged;
   final Function()? onTap;
@@ -43,7 +43,22 @@ class _CustomDropDownBtnState extends State<CustomDropDownBtn> {
                     color: ColorCodes.deepGrey)), // Not necessary for Option 1
             value: widget.selectedID,
             onChanged: widget.onChanged,
-            items: widget.items,
+            items: widget.items!.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: GoogleFonts.anekBangla(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                  // style: const TextStyle(
+                  //     color: Colors.black,
+                  //     fontSize: 16,
+                  //     fontWeight: FontWeight.w500),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),
