@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Common%20UI/loading_diaalogs.dart';
@@ -7,8 +9,11 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../Common UI/outline_button.dart';
 import '../../Common UI/submit_button.dart';
+import '../../Constants/url.dart';
+import '../../Utils/auth_class.dart';
 import '../../Utils/color_codes.dart';
 import '../../Utils/snackbars.dart';
+import 'package:http/http.dart' as http;
 
 class ShortListDetailsPage extends StatefulWidget {
   static const String routeName = '/shortListDetailsPage';
@@ -23,9 +28,11 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
   bool isLoading = false;
   bool isRead = false;
   var date = DateTime.now();
+  bool isRequestSend = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
+    chechkRequestSend();
     delayed();
     super.initState();
   }
@@ -36,6 +43,34 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
         isLoading = true;
       });
     }));
+  }
+
+  chechkRequestSend() async {
+    Map<String, dynamic> sendData = {"BIODATA_NO": 97, "SENDER_ID": 1714312854};
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${ApiURL.baseLink}/app/check_request_send'),
+        body: json.encode(sendData),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'authorization': BasicAuth().basicAuth
+        },
+      );
+      var msg = jsonDecode(res.body)['message'];
+      if (msg == "Not Exist" && res.statusCode == 200) {
+        setState(() {
+          isRequestSend = true;
+        });
+      }
+    } catch (e) {
+      print(e);
+      CustomSnackBars.snackBarDone(
+        context,
+        'কিছু ত্রুটি আছে, অনুগ্রহ করে আবার চেষ্টা করুন।',
+        ColorCodes.deepGrey,
+      );
+    }
   }
 
   @override
@@ -175,27 +210,30 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                 )),
       bottomNavigationBar: !isLoading
           ? const SizedBox()
-          : SafeArea(
-              child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-              child: SubmitButton(
-                  elevation: 0,
-                  borderColor: Colors.transparent,
-                  gradColor1: ColorCodes.softGreen,
-                  gradColor2: ColorCodes.softGreen,
-                  borderWidth: 0,
-                  text: "যোগাযোগের জন্য অনুরোধ পাঠান",
-                  buttonRadius: 8,
-                  height: 40,
-                  width: double.infinity,
-                  fontWeight: FontWeight.w500,
-                  textColor: Colors.white,
-                  textSize: 16,
-                  press: () => {
-                        requestConfirmationDialog(context),
-                        setState((() => isRead = false))
-                      }),
-            )),
+          : !isRequestSend
+              ? const SizedBox()
+              : SafeArea(
+                  child: Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: SubmitButton(
+                      elevation: 0,
+                      borderColor: Colors.transparent,
+                      gradColor1: ColorCodes.softGreen,
+                      gradColor2: ColorCodes.softGreen,
+                      borderWidth: 0,
+                      text: "যোগাযোগের জন্য অনুরোধ পাঠান",
+                      buttonRadius: 8,
+                      height: 40,
+                      width: double.infinity,
+                      fontWeight: FontWeight.w500,
+                      textColor: Colors.white,
+                      textSize: 16,
+                      press: () => {
+                            requestConfirmationDialog(context),
+                            setState((() => isRead = false))
+                          }),
+                )),
     );
   }
 
