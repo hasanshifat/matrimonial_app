@@ -1,15 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../Common UI/loading_diaalogs.dart';
 import '../../Common UI/outline_button.dart';
 import '../../Common UI/submit_button.dart';
+import '../../Constants/url.dart';
+import '../../Utils/auth_class.dart';
 import '../../Utils/color_codes.dart';
+import '../../Utils/date_formation.dart';
+import 'package:http/http.dart' as http;
+
+import '../Model/pending_request.dart';
+import '../Provider/pending_request_prv.dart';
 
 class BioDataRequestDetailsPage extends StatefulWidget {
   static const String routeName = '/BioDataRequestDetailsPage';
+  final PendingRequestModel p;
+  final int listIndex;
   final bool isAccepted;
-  const BioDataRequestDetailsPage({super.key, required this.isAccepted});
+  const BioDataRequestDetailsPage(
+      {super.key,
+      required this.isAccepted,
+      required this.p,
+      required this.listIndex});
 
   @override
   State<BioDataRequestDetailsPage> createState() =>
@@ -20,10 +37,13 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
   Size? pageSize;
   bool isLoading = false;
   bool isRead = false;
+  bool isRequestSend = false;
+  var date = DateTime.now();
+  late PendingBiodataPrv pendingBiodataPrv;
   @override
   void initState() {
+    pendingBiodataPrv = Provider.of<PendingBiodataPrv>(context, listen: false);
     delayed();
-    print("Value: ${widget.isAccepted}");
     super.initState();
   }
 
@@ -130,7 +150,11 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
                                   basicDetailsTable(),
                                 ],
                               ),
-                              widget.isAccepted ? const SizedBox() : _rowBtn()
+                              widget.isAccepted
+                                  ? const SizedBox()
+                                  : isRequestSend
+                                      ? const SizedBox()
+                                      : _rowBtn()
                             ],
                           ),
                         ),
@@ -197,7 +221,11 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
               fontWeight: FontWeight.w500,
               textColor: Colors.white,
               textSize: 14,
-              press: (() => {})),
+              press: (() async => {
+                    CustomLoadingDialogs.circleProgressLoading(context),
+                    await acceptRejectionService(
+                        "A", widget.p.rbId, widget.listIndex),
+                  })),
         ),
         const SizedBox(
           width: 5,
@@ -216,7 +244,11 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
               fontWeight: FontWeight.w500,
               textColor: Colors.white,
               textSize: 14,
-              press: (() => {})),
+              press: (() async => {
+                    CustomLoadingDialogs.circleProgressLoading(context),
+                    await acceptRejectionService(
+                        "R", widget.p.rbId, widget.listIndex),
+                  })),
         ),
       ]),
     );
@@ -534,5 +566,45 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
                     ),
                   ),
                 )))));
+  }
+
+  //! Http Request
+  Future acceptRejectionService(String? status, int? rbid, int? index) async {
+    print('BID: $rbid');
+    String? nowDate;
+    await DateFormation()
+        .dateFormat(context, date.toString())
+        .then((value) => nowDate = value.toString());
+    Map data = {
+      "STATUS": "$status",
+      "ACTION_TIME": "${nowDate}T${date.hour}:${date.minute}:${date.second}Z",
+      "REMARKS_OF_REJECTION": ""
+    };
+    try {
+      http.Response res = await http.put(
+        Uri.parse('${ApiURL.baseLink}/app/request_accept_reject/$rbid'),
+        body: json.encode(data),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': BasicAuth().basicAuth
+        },
+      );
+      if (res.statusCode == 200) {
+        setState(() {
+          isRequestSend = true;
+          pendingBiodataPrv.pendingList
+              .removeWhere((item) => item.rbId == rbid);
+          Navigator.pop(context);
+        });
+      }
+    } catch (e) {
+      print(e);
+      // CustomSnackBars().showSnackBar(
+      //   context,
+      //   e.toString(),
+      //   ColorCodes.softRed,
+      // );
+      return List.empty();
+    }
   }
 }
