@@ -100,9 +100,14 @@ class _BioDataRequestPageState extends State<BioDataRequestPage> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: () async {
-          Navigator.pushNamedAndRemoveUntil(
-              context, BioDataRequestDetailsPage.routeName, (route) => true,
-              arguments: false);
+          Navigator.push(context, MaterialPageRoute(builder: ((context) => BioDataRequestDetailsPage(p: p, listIndex: i))));
+
+          // Navigator.pushNamedAndRemoveUntil(
+          //   context,
+          //   BioDataRequestDetailsPage.routeName,
+          //   (route) => true,
+          //   arguments: {true, p, i},
+          // );
         },
         child: Container(
           decoration: BoxDecoration(
