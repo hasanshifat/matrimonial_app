@@ -50,7 +50,7 @@ class _CustomDropDownBtnState extends State<CustomDropDownBtn> {
                   value,
                   style: GoogleFonts.anekBangla(
                       color: Colors.black,
-                      fontSize: 16,
+                      fontSize: 12,
                       fontWeight: FontWeight.w500),
                   // style: const TextStyle(
                   //     color: Colors.black,

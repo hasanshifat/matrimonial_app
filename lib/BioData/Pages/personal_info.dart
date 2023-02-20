@@ -18,11 +18,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   Widget fieldLabel(String label) {
     return Row(
       children: [
-        Text(
-          label,
-          // style: GoogleFonts.anekBangla(
-          //     color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
-          style: const TextTheme().bodyMedium,
+        Expanded(
+          child: Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            // style: GoogleFonts.anekBangla(
+            //     color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextTheme().bodyMedium,
+          ),
         ),
         const SizedBox(
           width: 6,
