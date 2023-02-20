@@ -14,17 +14,18 @@ import '../../Utils/color_codes.dart';
 import '../../Utils/date_formation.dart';
 import 'package:http/http.dart' as http;
 
-import '../Model/pending_request.dart';
+import '../Model/pending_request_model.dart';
 import '../Provider/pending_request_prv.dart';
 
 class BioDataRequestDetailsPage extends StatefulWidget {
   static const String routeName = '/BioDataRequestDetailsPage';
+  // final bool isAccepted;
   final PendingRequestModel p;
   final int listIndex;
-  final bool isAccepted;
+
   const BioDataRequestDetailsPage(
       {super.key,
-      required this.isAccepted,
+      // required this.isAccepted,
       required this.p,
       required this.listIndex});
 
@@ -123,9 +124,9 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
                                           ),
                                         ),
                                         Text(
-                                          'MAF102',
+                                          'BM${widget.p.biodataNo}',
                                           style: GoogleFonts.anekBangla(
-                                              fontSize: 25,
+                                              fontSize: 20,
                                               color: ColorCodes.deepGrey
                                                   .withOpacity(0.8),
                                               fontWeight: FontWeight.w500),
@@ -150,11 +151,7 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
                                   basicDetailsTable(),
                                 ],
                               ),
-                              widget.isAccepted
-                                  ? const SizedBox()
-                                  : isRequestSend
-                                      ? const SizedBox()
-                                      : _rowBtn()
+                              isRequestSend ? const SizedBox() : _rowBtn()
                             ],
                           ),
                         ),
@@ -398,7 +395,7 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: Text(
           title!,
-          overflow: TextOverflow.clip,
+          overflow: TextOverflow.ellipsis,
           softWrap: true,
           style: const TextTheme().bodySmall,
         ),
@@ -411,10 +408,10 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: Text(
           data,
-          overflow: TextOverflow.clip,
+          overflow: TextOverflow.ellipsis,
           softWrap: true,
           style: const TextTheme().bodySmall,
         ),
@@ -445,7 +442,7 @@ class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
             child: Text(
               data!,
               overflow: TextOverflow.clip,
