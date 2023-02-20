@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Utils/other_utils.dart';
 
 import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
 
-class MarriageInfoPage extends StatefulWidget {
-  const MarriageInfoPage({super.key});
+class ContactInfoPage extends StatefulWidget {
+  const ContactInfoPage({super.key});
 
   @override
-  State<MarriageInfoPage> createState() => _MarriageInfoPageState();
+  State<ContactInfoPage> createState() => _ContactInfoPageState();
 }
 
-class _MarriageInfoPageState extends State<MarriageInfoPage> {
-  String hintText = 'নির্বাচন করুন';
+class _ContactInfoPageState extends State<ContactInfoPage> {
   Size? pageSize;
-  String? selectedGurdianOppinion;
-  String? selectedJobOppinion;
-  String? selectedEducationOppinion;
-  TextEditingController marriageReason = TextEditingController();
+  String hintText = 'নির্বাচন করুন';
+  TextEditingController gurdianName = TextEditingController();
+  TextEditingController gurdianMobileNo = TextEditingController();
+  TextEditingController gurdianEmail = TextEditingController();
+  TextEditingController relationWithGurdian = TextEditingController();
+
   Widget fieldLabel(String label) {
     return Row(
       children: [
         Text(
           label,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
           // style: GoogleFonts.anekBangla(
           //     color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
           style: const TextTheme().bodyMedium,
@@ -36,7 +38,7 @@ class _MarriageInfoPageState extends State<MarriageInfoPage> {
           children: const [
             Icon(
               Icons.star,
-              color: ColorCodes.deepRed,
+              color: Colors.redAccent,
               size: 12,
             ),
             SizedBox(
@@ -58,61 +60,34 @@ class _MarriageInfoPageState extends State<MarriageInfoPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              fieldLabel("অভিভাবক আপনার বিয়েতে রাজি কি না?"),
-              SizedBox(
-                width: double.infinity,
-                child: CustomDropDownBtn(
-                    selectedID: selectedGurdianOppinion,
-                    onChanged: (v) {
-                      setState(() {
-                        selectedGurdianOppinion = v.toString();
-                      });
-                    },
-                    onTap: () {},
-                    hint: hintText,
-                    items: const ['জী', 'না']),
-              ),
-              OtherUtils.height10,
-              fieldLabel("বিয়ের পর স্ত্রীকে চাকরী করতে দিতে চান?"),
-              SizedBox(
-                width: double.infinity,
-                child: CustomDropDownBtn(
-                    selectedID: selectedJobOppinion,
-                    onChanged: (v) {
-                      setState(() {
-                        selectedJobOppinion = v.toString();
-                      });
-                    },
-                    onTap: () {},
-                    hint: hintText,
-                    items: const ['জী', 'না']),
-              ),
-              OtherUtils.height10,
-              fieldLabel("বিয়ের পর স্ত্রীকে পড়াশোনা করতে দিতে চান?"),
-              SizedBox(
-                width: double.infinity,
-                child: CustomDropDownBtn(
-                    selectedID: selectedEducationOppinion,
-                    onChanged: (v) {
-                      setState(() {
-                        selectedEducationOppinion = v.toString();
-                      });
-                    },
-                    onTap: () {},
-                    hint: hintText,
-                    items: const ['জী', 'না']),
-              ),
-              OtherUtils.height10,
-              Text(
-                "বিয়ের কারণ",
-                style: const TextTheme().bodyMedium,
-              ),
+              fieldLabel("অভিভাবকের নাম"),
               CustomTextField(
-                controller: marriageReason,
-                hintText: "",
-                maxLength: 500,
-                maxLines: 4,
+                controller: gurdianName,
+                hintText: "পূর্ণ নাম লিখুন",
+                maxLength: 60,
               ),
+              fieldLabel("অভিভাবকের সাথে সম্পর্ক"), //db te nai
+              CustomTextField(
+                controller: relationWithGurdian,
+                hintText: "যেমন: বাবা",
+                maxLength: 40,
+              ),
+              fieldLabel("অভিভাবকের মোবাইল নাম্বার"),
+              CustomTextField(
+                controller: gurdianMobileNo,
+                hintText: "",
+                maxLength: 11,
+                keyboardType: TextInputType.phone,
+              ),
+              fieldLabel("বায়োডাটা গ্রহণের ই-মেইল"),
+              CustomTextField(
+                controller: gurdianEmail,
+                hintText: "",
+                maxLength: 60,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              OtherUtils.height10,
+              OtherUtils.height10,
               OtherUtils.height10,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

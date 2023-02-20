@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
-import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Utils/other_utils.dart';
 
 import '../../Common UI/submit_button.dart';
 import '../../Utils/color_codes.dart';
 
-class MarriageInfoPage extends StatefulWidget {
-  const MarriageInfoPage({super.key});
+class CommitmentPage extends StatefulWidget {
+  const CommitmentPage({super.key});
 
   @override
-  State<MarriageInfoPage> createState() => _MarriageInfoPageState();
+  State<CommitmentPage> createState() => _CommitmentPageState();
 }
 
-class _MarriageInfoPageState extends State<MarriageInfoPage> {
-  String hintText = 'নির্বাচন করুন';
+class _CommitmentPageState extends State<CommitmentPage> {
   Size? pageSize;
-  String? selectedGurdianOppinion;
-  String? selectedJobOppinion;
-  String? selectedEducationOppinion;
-  TextEditingController marriageReason = TextEditingController();
+  String hintText = 'নির্বাচন করুন';
+  String? parentAgreedOrNot;
+  String? trueOrFalse;
+  String? canTakeAction;
   Widget fieldLabel(String label) {
     return Row(
       children: [
-        Text(
-          label,
-          // style: GoogleFonts.anekBangla(
-          //     color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
-          style: const TextTheme().bodyMedium,
+        Expanded(
+          child: Text(
+            label,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            // style: GoogleFonts.anekBangla(
+            //     color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextTheme().bodyMedium,
+          ),
         ),
         const SizedBox(
           width: 6,
@@ -36,7 +38,7 @@ class _MarriageInfoPageState extends State<MarriageInfoPage> {
           children: const [
             Icon(
               Icons.star,
-              color: ColorCodes.deepRed,
+              color: Colors.redAccent,
               size: 12,
             ),
             SizedBox(
@@ -58,61 +60,55 @@ class _MarriageInfoPageState extends State<MarriageInfoPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              fieldLabel("অভিভাবক আপনার বিয়েতে রাজি কি না?"),
+              fieldLabel(
+                  "example.com অ্যাপ এ বায়োডাটা জমা দিচ্ছেন, তা আপনার অভিভাবক জানেন?"),
               SizedBox(
                 width: double.infinity,
                 child: CustomDropDownBtn(
-                    selectedID: selectedGurdianOppinion,
+                    selectedID: parentAgreedOrNot,
                     onChanged: (v) {
                       setState(() {
-                        selectedGurdianOppinion = v.toString();
+                        parentAgreedOrNot = v.toString();
                       });
                     },
                     onTap: () {},
                     hint: hintText,
-                    items: const ['জী', 'না']),
+                    items: const ['হ্যাঁ', 'না']),
               ),
               OtherUtils.height10,
-              fieldLabel("বিয়ের পর স্ত্রীকে চাকরী করতে দিতে চান?"),
+              fieldLabel(
+                  "আল্লাহ'র শপথ করে সাক্ষ্য দিন, যে তথ্যগুলো দিয়েছেন সব সত্য?"),
               SizedBox(
                 width: double.infinity,
                 child: CustomDropDownBtn(
-                    selectedID: selectedJobOppinion,
+                    selectedID: trueOrFalse,
                     onChanged: (v) {
                       setState(() {
-                        selectedJobOppinion = v.toString();
+                        trueOrFalse = v.toString();
                       });
                     },
                     onTap: () {},
                     hint: hintText,
-                    items: const ['জী', 'না']),
+                    items: const ['হ্যাঁ', 'না']),
               ),
               OtherUtils.height10,
-              fieldLabel("বিয়ের পর স্ত্রীকে পড়াশোনা করতে দিতে চান?"),
+              fieldLabel(
+                  "কোনো মিথ্যা তথ্য প্রদান করলে দুনিয়াবী আইনগত এবং আখিরাতের দায়ভার example.com কর্তৃপক্ষ নিবে না। আপনি কি সম্মত?"),
               SizedBox(
                 width: double.infinity,
                 child: CustomDropDownBtn(
-                    selectedID: selectedEducationOppinion,
+                    selectedID: canTakeAction,
                     onChanged: (v) {
                       setState(() {
-                        selectedEducationOppinion = v.toString();
+                        canTakeAction = v.toString();
                       });
                     },
                     onTap: () {},
                     hint: hintText,
-                    items: const ['জী', 'না']),
+                    items: const ['হ্যাঁ', 'না']),
               ),
               OtherUtils.height10,
-              Text(
-                "বিয়ের কারণ",
-                style: const TextTheme().bodyMedium,
-              ),
-              CustomTextField(
-                controller: marriageReason,
-                hintText: "",
-                maxLength: 500,
-                maxLines: 4,
-              ),
+              OtherUtils.height10,
               OtherUtils.height10,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/BioData/Pages/address_page.dart';
+import 'package:matrimonial_app/BioData/Pages/commitment_page.dart';
+import 'package:matrimonial_app/BioData/Pages/contact_info_page.dart';
 import 'package:matrimonial_app/BioData/Pages/educational_info_page.dart';
 import 'package:matrimonial_app/BioData/Pages/family_info_page.dart';
 import 'package:matrimonial_app/BioData/Pages/general_info_page.dart';
 import 'package:matrimonial_app/BioData/Pages/marriage_info_page.dart';
 import 'package:matrimonial_app/BioData/Pages/personal_info.dart';
 import 'package:matrimonial_app/BioData/Pages/professional_info.dart';
+import 'package:matrimonial_app/BioData/Pages/spouse_info_page.dart';
 
 import '../../Utils/color_codes.dart';
 
@@ -44,7 +47,7 @@ class _BioDataPageState extends State<BioDataPage>
   Widget build(BuildContext context) {
     pageSize = MediaQuery.of(context).size;
     return DefaultTabController(
-      length: 7,
+      length: 10,
       child: Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(50),
@@ -79,6 +82,15 @@ class _BioDataPageState extends State<BioDataPage>
                     Text(
                       "বিবাহ সম্পর্কিত তথ্য",
                     ),
+                    Text(
+                      "প্রত্যাশিত জীবনসঙ্গী",
+                    ),
+                    Text(
+                      "অঙ্গীকারনামা",
+                    ),
+                    Text(
+                      "যোগাযোগ",
+                    ),
                   ]),
             )),
         body: const SafeArea(
@@ -91,6 +103,9 @@ class _BioDataPageState extends State<BioDataPage>
               PersonalInfoPage(),
               ProfessionalInfoPage(),
               MarriageInfoPage(),
+              SpouseInfoPage(),
+              CommitmentPage(),
+              ContactInfoPage(),
             ],
           ),
         ),

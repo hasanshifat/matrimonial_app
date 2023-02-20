@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
+import 'package:intl/intl.dart';
 
 import '../../Common UI/custom_drop_down.dart';
 import '../../Common UI/submit_button.dart';
@@ -25,6 +25,22 @@ class _GeneralInfoPageState extends State<GeneralInfoPage> {
   String hintText = 'নির্বাচন করুন';
   TextEditingController birthDate = TextEditingController();
   Size? pageSize;
+  DateTime selectedDate = DateTime.now();
+  String? formattedDate;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        formattedDate = DateFormat('dd-MM-yyyy').format(selectedDate);
+      });
+    }
+  }
+
   Widget fieldLabel(String label) {
     return Row(
       children: [
@@ -95,10 +111,37 @@ class _GeneralInfoPageState extends State<GeneralInfoPage> {
                       items: AppConstants.maritialStatus)),
               OtherUtils.height10,
               fieldLabel("জন্মসন"),
-              CustomTextField(
-                controller: birthDate,
-                hintText: "",
-                maxLength: 4,
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border:
+                        Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formattedDate == null
+                            ? "যেমন: 11-11-1997"
+                            : formattedDate!,
+                        style: const TextTheme().bodyMedium,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _selectDate(context);
+                        },
+                        child: const Icon(
+                          Icons.calendar_today,
+                          color: ColorCodes.primaryPink,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
 
               fieldLabel("উচ্চতা"),
