@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import '../BioData/Pages/bio_data_page.dart';
+import '../Biodata Request/Model/pending_request.dart';
 import '../Biodata Request/Pages/biodata_details_page.dart';
 import '../Short Listed/Pages/shortlist_details_page.dart';
 import '../Short Listed/Pages/shortlist_page.dart';
@@ -43,10 +44,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       );
     case BioDataRequestDetailsPage.routeName:
       bool value = routeSettings.arguments as bool;
+      var p = routeSettings.arguments as PendingRequestModel;
+      int listIndex = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => BioDataRequestDetailsPage(
           isAccepted: value,
+          p: p,
+          listIndex: listIndex,
         ),
       );
     // case AddressScreen.routeName:
