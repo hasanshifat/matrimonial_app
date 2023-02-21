@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/BioData/Pages/bio_data_page.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:matrimonial_app/Homepage/pages/search_page.dart';
+import 'package:matrimonial_app/Utils/other_utils.dart';
 import 'package:provider/provider.dart';
 import '../../BioData/Pages/bio_data_page.dart';
 import '../../Biodata Request/Pages/biodata_request_page.dart';
@@ -60,17 +62,28 @@ class _NavBarPageState extends State<NavBarPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Spacer(),
-            Text(
-              appName(),
-              style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
-            ),
-            const Spacer(),
-          ],
+        title: Text(
+          appName(),
+          style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
         ),
+        centerTitle: true,
+        actions: [
+          isHomeActive
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                      onTap: () => Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            SearchingPage.routeName,
+                            (route) => true,
+                          ),
+                      child: const Icon(
+                        Icons.search,
+                        color: ColorCodes.primaryPink,
+                      )),
+                )
+              : const SizedBox()
+        ],
       ),
       bottomNavigationBar: SafeArea(
           child: Container(
