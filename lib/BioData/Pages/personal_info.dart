@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
 import 'package:matrimonial_app/Common%20UI/custom_text_form_field.dart';
 import 'package:matrimonial_app/Constants/strings.dart';
 import 'package:matrimonial_app/Utils/other_utils.dart';
 
 import '../../Common UI/submit_button.dart';
+import '../../Constants/url.dart';
+import '../../Utils/auth_class.dart';
 import '../../Utils/color_codes.dart';
+import 'package:http/http.dart' as http;
+
+import '../Model/hobbies_type_model.dart';
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -15,6 +23,17 @@ class PersonalInfoPage extends StatefulWidget {
 }
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  late List<HobbiesTypeModel>? selectedHobby;
+  late List<HobbiesTypeModel>? hobbiesList;
+
+  @override
+  void initState() {
+    selectedHobby = [];
+    hobbiesList = [];
+    getHobbyTypes();
+    super.initState();
+  }
+
   Widget fieldLabel(String label) {
     return Row(
       children: [
@@ -164,6 +183,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                 maxLines: 4,
               ),
               OtherUtils.height10,
+              hobbiesList == null
+                  ? const SizedBox()
+                  : fieldLabel("শখ ও আগ্রহ (৫ টি)"),
+              hobbiesList == null
+                  ? const SizedBox()
+                  : hobbiesFilterWidget(context),
+              OtherUtils.height10,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -202,5 +228,94 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         ),
       ),
     );
+  }
+
+  Wrap hobbiesFilterWidget(BuildContext context) {
+    return Wrap(
+      children: hobbiesList!.map(
+        (hobby) {
+          bool isSelected = false;
+          if (selectedHobby!.contains(hobby)) {
+            isSelected = true;
+          }
+          return GestureDetector(
+            onTap: () {
+              if (!selectedHobby!.contains(hobby)) {
+                if (selectedHobby!.length < 5) {
+                  selectedHobby!.add(hobby);
+                  setState(() {});
+                  for (var element in selectedHobby!) {
+                    print(element.hobbyId);
+                  }
+                }
+                // else {
+                //   CustomSnackBars().showSnackBar(
+                //       context,
+                //       'সর্বোচ্চ ৫ টি নির্বাচন করতে পারেন',
+                //       ColorCodes.seconderyStrongPink);
+
+                //   print(selectedHobby);
+                // }
+              } else {
+                selectedHobby!.removeWhere((element) => element == hobby);
+                setState(() {});
+                print(selectedHobby);
+              }
+            },
+            child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  decoration: BoxDecoration(
+                      color: isSelected ? ColorCodes.softGreen : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          width: 0.5,
+                          color: isSelected
+                              ? ColorCodes.deepGreen
+                              : ColorCodes.deepGrey)),
+                  child: Text(
+                    hobby.hobbyName!,
+                    style: GoogleFonts.anekBangla(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: isSelected ? Colors.white : ColorCodes.deepGrey),
+                  ),
+                )),
+          );
+        },
+      ).toList(),
+    );
+  }
+
+  //! Http Request
+  Future<List<HobbiesTypeModel>> getHobbyTypes() async {
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${ApiURL.baseLink}/hobbies_master/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': BasicAuth().basicAuth
+        },
+      );
+      if (res.statusCode == 200) {
+        setState(() {
+          Map<String, dynamic> map = jsonDecode(utf8.decode(res.bodyBytes));
+          List<dynamic> data = map["items"];
+          hobbiesList = hobbiesTypeModelFromJson(jsonEncode(data));
+        });
+      }
+
+      return hobbiesList!;
+    } catch (e) {
+      print(e);
+      // CustomSnackBars().showSnackBar(
+      //   context,
+      //   e.toString(),
+      //   ColorCodes.softRed,
+      // );
+      return List.empty();
+    }
   }
 }
