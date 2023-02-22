@@ -2,37 +2,48 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:matrimonial_app/Common%20UI/loading_diaalogs.dart';
-import 'package:matrimonial_app/Short%20Listed/Services/short_listed_service.dart';
-import 'package:matrimonial_app/Utils/date_formation.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../Common UI/loading_diaalogs.dart';
 import '../../Common UI/outline_button.dart';
 import '../../Common UI/submit_button.dart';
 import '../../Constants/url.dart';
 import '../../Utils/auth_class.dart';
 import '../../Utils/color_codes.dart';
-import '../../Utils/snackbars.dart';
+import '../../Utils/date_formation.dart';
 import 'package:http/http.dart' as http;
 
-class ShortListDetailsPage extends StatefulWidget {
-  static const String routeName = '/shortListDetailsPage';
-  const ShortListDetailsPage({super.key});
+import '../Model/pending_request_model.dart';
+import '../Provider/pending_request_prv.dart';
+
+class BioDataRequestDetailsPage extends StatefulWidget {
+  static const String routeName = '/BioDataRequestDetailsPage';
+  // final bool isAccepted;
+  final PendingRequestModel p;
+  final int listIndex;
+
+  const BioDataRequestDetailsPage(
+      {super.key,
+      // required this.isAccepted,
+      required this.p,
+      required this.listIndex});
 
   @override
-  State<ShortListDetailsPage> createState() => _ShortListDetailsPageState();
+  State<BioDataRequestDetailsPage> createState() =>
+      _BioDataRequestDetailsPageState();
 }
 
-class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
+class _BioDataRequestDetailsPageState extends State<BioDataRequestDetailsPage> {
   Size? pageSize;
   bool isLoading = false;
   bool isRead = false;
-  var date = DateTime.now();
   bool isRequestSend = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  var date = DateTime.now();
+  late PendingBiodataPrv pendingBiodataPrv;
   @override
   void initState() {
-    chechkRequestSend();
+    pendingBiodataPrv = Provider.of<PendingBiodataPrv>(context, listen: false);
     delayed();
     super.initState();
   }
@@ -45,39 +56,10 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
     }));
   }
 
-  chechkRequestSend() async {
-    Map<String, dynamic> sendData = {"BIODATA_NO": 97, "SENDER_ID": 1714312854};
-
-    try {
-      http.Response res = await http.post(
-        Uri.parse('${ApiURL.baseLink}/app/check_request_send'),
-        body: json.encode(sendData),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'authorization': BasicAuth().basicAuth
-        },
-      );
-      var msg = jsonDecode(res.body)['message'];
-      if (msg == "Not Exist" && res.statusCode == 200) {
-        setState(() {
-          isRequestSend = true;
-        });
-      }
-    } catch (e) {
-      print(e);
-      CustomSnackBars.snackBarDone(
-        context,
-        'কিছু ত্রুটি আছে, অনুগ্রহ করে আবার চেষ্টা করুন।',
-        ColorCodes.deepGrey,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     pageSize = MediaQuery.of(context).size;
     return Scaffold(
-      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
           'বিস্তারিত',
@@ -113,56 +95,63 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        decoration: BoxDecoration(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 10),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Image.asset(
+                                              'assets/images/muslim.png', //yl-bg
+                                              width: pageSize!.height * 0.13,
+                                              height: pageSize!.height * 0.16,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         ),
-                                        child: Image.asset(
-                                          'assets/images/muslim.png', //yl-bg
-                                          width: pageSize!.height * 0.13,
-                                          height: pageSize!.height * 0.16,
-                                          fit: BoxFit.cover,
+                                        Text(
+                                          'BM${widget.p.biodataNo}',
+                                          style: GoogleFonts.anekBangla(
+                                              fontSize: 20,
+                                              color: ColorCodes.deepGrey
+                                                  .withOpacity(0.8),
+                                              fontWeight: FontWeight.w500),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    Text(
-                                      'MAF102',
-                                      style: GoogleFonts.anekBangla(
-                                          fontSize: 25,
-                                          color: ColorCodes.deepGrey
-                                              .withOpacity(0.8),
-                                          fontWeight: FontWeight.w500),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: VerticalDivider(
+                                      width: 0.5,
+                                      thickness: .5,
+                                      color:
+                                          ColorCodes.deepGrey.withOpacity(0.5),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  //? Table of basic details of bride/groom
+                                  basicDetailsTable(),
+                                ],
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: VerticalDivider(
-                                  width: 0.5,
-                                  thickness: .5,
-                                  color: ColorCodes.deepGrey.withOpacity(0.5),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              //? Table of basic details of bride/groom
-                              basicDetailsTable(),
+                              isRequestSend ? const SizedBox() : _rowBtn()
                             ],
                           ),
                         ),
@@ -208,32 +197,57 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                     ),
                   ),
                 )),
-      bottomNavigationBar: !isLoading
-          ? const SizedBox()
-          : !isRequestSend
-              ? const SizedBox()
-              : SafeArea(
-                  child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                  child: SubmitButton(
-                      elevation: 0,
-                      borderColor: Colors.transparent,
-                      gradColor1: ColorCodes.softGreen,
-                      gradColor2: ColorCodes.softGreen,
-                      borderWidth: 0,
-                      text: "যোগাযোগের জন্য অনুরোধ পাঠান",
-                      buttonRadius: 8,
-                      height: 40,
-                      width: double.infinity,
-                      fontWeight: FontWeight.w500,
-                      textColor: Colors.white,
-                      textSize: 16,
-                      press: () => {
-                            requestConfirmationDialog(context),
-                            setState((() => isRead = false))
-                          }),
-                )),
+    );
+  }
+
+  _rowBtn() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(
+          child: SubmitButton(
+              elevation: 2,
+              borderColor: Colors.transparent,
+              gradColor1: ColorCodes.purpleBlue,
+              gradColor2: ColorCodes.purpleBlue,
+              borderWidth: 0,
+              text: "গ্রহণ করুন",
+              buttonRadius: 8,
+              height: 30,
+              width: 200,
+              fontWeight: FontWeight.w500,
+              textColor: Colors.white,
+              textSize: 14,
+              press: (() async => {
+                    CustomLoadingDialogs.circleProgressLoading(context),
+                    await acceptRejectionService(
+                        "A", widget.p.rbId, widget.listIndex),
+                  })),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Expanded(
+          child: SubmitButton(
+              elevation: 2,
+              borderColor: Colors.transparent,
+              gradColor1: ColorCodes.deepGrey.withOpacity(0.5),
+              gradColor2: ColorCodes.deepGrey.withOpacity(0.5),
+              borderWidth: 0,
+              text: "প্রত্যাখ্যান করুন",
+              buttonRadius: 8,
+              height: 30,
+              width: 200,
+              fontWeight: FontWeight.w500,
+              textColor: Colors.white,
+              textSize: 14,
+              press: (() async => {
+                    CustomLoadingDialogs.circleProgressLoading(context),
+                    await acceptRejectionService(
+                        "R", widget.p.rbId, widget.listIndex),
+                  })),
+        ),
+      ]),
     );
   }
 
@@ -347,11 +361,10 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
 
   BorderSide tableBorderDesign() {
     return BorderSide(
-      width: 0.5,
-      color: ColorCodes.deepGrey.withOpacity(0.5),
-      style: BorderStyle.solid,
-      // strokeAlign: StrokeAlign.outside
-    );
+        width: 0.5,
+        color: ColorCodes.deepGrey.withOpacity(0.5),
+        style: BorderStyle.solid,
+        strokeAlign: StrokeAlign.outside);
   }
 
   Table basicDetailsTable() {
@@ -382,7 +395,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: Text(
           title!,
-          overflow: TextOverflow.clip,
+          overflow: TextOverflow.ellipsis,
           softWrap: true,
           style: const TextTheme().bodySmall,
         ),
@@ -395,10 +408,10 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         child: Text(
           data,
-          overflow: TextOverflow.clip,
+          overflow: TextOverflow.ellipsis,
           softWrap: true,
           style: const TextTheme().bodySmall,
         ),
@@ -429,7 +442,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
             child: Text(
               data!,
               overflow: TextOverflow.clip,
@@ -440,7 +453,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
         ]);
   }
 
-  requestConfirmationDialog(BuildContext dialogContext) {
+  requestConfirmationDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: ((context) => StatefulBuilder(
@@ -528,38 +541,7 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                                       ? Colors.grey
                                       : ColorCodes.deepGreen,
                                   textSize: 14,
-                                  press: !isRead
-                                      ? null
-                                      : (() async {
-                                          Navigator.pop(context);
-                                          String? nowDate;
-                                          await DateFormation()
-                                              .dateFormat(
-                                                  context, date.toString())
-                                              .then((value) => setState(() {
-                                                    nowDate = value.toString();
-                                                  }));
-                                          // ignore: use_build_context_synchronously
-                                          CustomLoadingDialogs
-                                              .circleProgressLoading(
-                                                  dialogContext);
-
-                                          Map<String, String> data = {
-                                            "biodata_no": '199',
-                                            "sender_id": '1714312854',
-                                            "receiver_id": '3128',
-                                            "status": 'P',
-                                            "send_time":
-                                                '${nowDate}T${date.hour}:${date.minute}:${date.second}Z'
-                                          };
-
-                                          // ignore: use_build_context_synchronously
-                                          await ShortlistService()
-                                              .sendRequestService(
-                                                  dialogContext, data);
-                                          navPop();
-                                          // ignore: use_build_context_synchronously
-                                        })),
+                                  press: isRead ? null : (() => null)),
                               OutLineButton(
                                   elevation: 2,
                                   borderColor:
@@ -583,7 +565,43 @@ class _ShortListDetailsPageState extends State<ShortListDetailsPage> {
                 )))));
   }
 
-  navPop() {
-    Navigator.of(context).pop();
+  //! Http Request
+  Future acceptRejectionService(String? status, int? rbid, int? index) async {
+    print('BID: $rbid');
+    String? nowDate;
+    await DateFormation()
+        .dateFormat(context, date.toString())
+        .then((value) => nowDate = value.toString());
+    Map data = {
+      "STATUS": "$status",
+      "ACTION_TIME": "${nowDate}T${date.hour}:${date.minute}:${date.second}Z",
+      "REMARKS_OF_REJECTION": ""
+    };
+    try {
+      http.Response res = await http.put(
+        Uri.parse('${ApiURL.baseLink}/app/request_accept_reject/$rbid'),
+        body: json.encode(data),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': BasicAuth().basicAuth
+        },
+      );
+      if (res.statusCode == 200) {
+        setState(() {
+          isRequestSend = true;
+          pendingBiodataPrv.pendingList
+              .removeWhere((item) => item.rbId == rbid);
+          Navigator.pop(context);
+        });
+      }
+    } catch (e) {
+      print(e);
+      // CustomSnackBars().showSnackBar(
+      //   context,
+      //   e.toString(),
+      //   ColorCodes.softRed,
+      // );
+      return List.empty();
+    }
   }
 }

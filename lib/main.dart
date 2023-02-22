@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:matrimonial_app/Homepage/pages/navigation_bar_page.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import 'package:matrimonial_app/Login/Provider/user.dart';
 import 'package:provider/provider.dart';
+import 'Biodata Request/Provider/pending_request_prv.dart';
 import 'Short Listed/Hive/short_listed_class.dart';
 import 'Utils/color_codes.dart';
 import 'Utils/page_router.dart';
@@ -20,6 +22,9 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => PendingBiodataPrv(),
     )
   ], child: const MyApp()));
 }
@@ -69,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.dark))),
         onGenerateRoute: (settings) => generateRoute(settings),
-        home: const LoginPage()
+        home: const NavBarPage()
         //  Provider.of<UserProvider>(context, listen: false).user.token == null
         //     ? const LoginPage()
         //     : const RegistrationPage(),

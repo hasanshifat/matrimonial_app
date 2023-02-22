@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matrimonial_app/BioData/Pages/bio_data_page.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:matrimonial_app/Homepage/pages/search_page.dart';
+import 'package:matrimonial_app/Utils/other_utils.dart';
+import 'package:provider/provider.dart';
 import '../../BioData/Pages/bio_data_page.dart';
+import '../../Biodata Request/Pages/biodata_request_page.dart';
+import '../../Biodata Request/Provider/pending_request_prv.dart';
 import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
 
@@ -22,9 +28,12 @@ class _NavBarPageState extends State<NavBarPage> {
   bool isRequestActive = false;
   bool isProfileActive = false;
   var body;
+  late PendingBiodataPrv pendingBiodataPrv;
   @override
   void initState() {
     isHomeActive = true;
+    pendingBiodataPrv = Provider.of<PendingBiodataPrv>(context, listen: false);
+
     appName();
     body = const Homepage();
     super.initState();
@@ -33,11 +42,13 @@ class _NavBarPageState extends State<NavBarPage> {
   String appName() {
     String name;
     if (isHomeActive) {
-      return name = 'App Name';
+      return name = 'হোমপেজ';
     } else if (isFavActive) {
       return name = 'প্রিয় তালিকা';
     } else if (isRequestActive) {
       return name = 'অনুরোধের তালিকা';
+    } else if (isBiodataActive) {
+      return name = 'জীবন বৃত্তান্ত';
     } else if (isProfileActive) {
       return name = 'প্রোফাইল';
     }
@@ -51,17 +62,28 @@ class _NavBarPageState extends State<NavBarPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Spacer(),
-            Text(
-              appName(),
-              style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
-            ),
-            const Spacer(),
-          ],
+        title: Text(
+          appName(),
+          style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
         ),
+        centerTitle: true,
+        actions: [
+          isHomeActive
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: GestureDetector(
+                      onTap: () => Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            SearchingPage.routeName,
+                            (route) => true,
+                          ),
+                      child: const Icon(
+                        Icons.search,
+                        color: ColorCodes.primaryPink,
+                      )),
+                )
+              : const SizedBox()
+        ],
       ),
       bottomNavigationBar: SafeArea(
           child: Container(
@@ -76,6 +98,7 @@ class _NavBarPageState extends State<NavBarPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
+              //? Homepage
               GestureDetector(
                 onTap: () => setState(() {
                   body = const Homepage();
@@ -95,6 +118,7 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
+              //?Shortlist
               GestureDetector(
                 onTap: () => setState(() {
                   body = const ShortListPage();
@@ -114,14 +138,17 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
+              //? Request Page
               GestureDetector(
                   onTap: () => setState(() {
-                        body = const ShortListPage();
+                        body = const BioDataRequestPage();
                         isHomeActive = false;
                         isBiodataActive = false;
                         isFavActive = false;
                         isProfileActive = false;
                         isRequestActive = true;
+                        pendingBiodataPrv.pendingList.clear();
+                        pendingBiodataPrv.getPendingList(context, 0, false);
                       }),
                   child: Image.asset(
                     'assets/images/request.png',
@@ -131,6 +158,7 @@ class _NavBarPageState extends State<NavBarPage> {
                         ? ColorCodes.primaryPink
                         : ColorCodes.deepGrey,
                   )),
+              //? My Biodata
               GestureDetector(
                 onTap: () => setState(() {
                   body = const BioDataPage();
@@ -150,6 +178,7 @@ class _NavBarPageState extends State<NavBarPage> {
                       : ColorCodes.deepGrey,
                 ),
               ),
+              //? Profile
               GestureDetector(
                 onTap: () => setState(() {
                   body = const ShortListPage();

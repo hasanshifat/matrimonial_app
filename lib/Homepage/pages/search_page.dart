@@ -2,40 +2,34 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:matrimonial_app/Common%20UI/submit_button.dart';
-import 'package:matrimonial_app/Homepage/Services/district_service.dart';
-import 'package:matrimonial_app/Homepage/Services/home_page_services.dart';
-import 'package:matrimonial_app/Homepage/model/district_model.dart';
-import 'package:matrimonial_app/Utils/color_codes.dart';
+import 'package:matrimonial_app/Common%20UI/custom_drop_down.dart';
 import 'package:matrimonial_app/Utils/other_utils.dart';
-import 'package:matrimonial_app/Utils/snackbars.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-import '../../Short Listed/Pages/shortlist_details_page.dart';
-import '../../Utils/date_formation.dart';
+import '../../Common UI/submit_button.dart';
+import '../../Utils/color_codes.dart';
+import '../Services/district_service.dart';
+import '../model/district_model.dart';
 import '../model/marraige_type.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class SearchingPage extends StatefulWidget {
+  static const String routeName = '/SearchingPage';
+  const SearchingPage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<SearchingPage> createState() => _SearchingPageState();
 }
 
-class _HomepageState extends State<Homepage> {
-  String img = 'unfav';
-  final searchController = TextEditingController();
-  List<String> hobbiList = [
-    'Reading',
-    'Writing',
-    'Singing',
-    'Cooking',
-    'Reding',
-    'Wriing',
-    'Sining',
-    'Cookin'
-  ];
-
+class _SearchingPageState extends State<SearchingPage> {
+  String? _selectedMarraigeType;
+  int? _selectedMarraigeTypeID;
+  String? _selectedBiodataType;
+  String? _selectedDivision;
+  String? _selectedDistrict;
+  String? _selectedThana;
+  String? _selectedCountry;
+  SfRangeValues _valuesAge = const SfRangeValues(20.0, 30.0);
+  SfRangeValues _valuesHeight = const SfRangeValues(4.0, 8.0);
   List<String>? selectedHobby = [];
   late List<String> occopationList;
   late List<String> selectedOccopationList;
@@ -46,21 +40,19 @@ class _HomepageState extends State<Homepage> {
   late List<String> thanaList;
   late List<String> countryList;
   late List<DistrictModel> divDisThanaList;
-  late HomePageService homePageService;
-  String? _selectedMarraigeType;
-  int? _selectedMarraigeTypeID;
-  String? _selectedBiodataType;
-  String? _selectedDivision;
-  String? _selectedDistrict;
-  String? _selectedThana;
-  String? _selectedCountry;
-  SfRangeValues _valuesAge = const SfRangeValues(20.0, 30.0);
-  SfRangeValues _valuesHeight = const SfRangeValues(4.0, 8.0);
   Size? pageSize;
-  var date = DateTime.now();
+  List<String> hobbiList = [
+    'Reading',
+    'Writing',
+    'Singing',
+    'Cooking',
+    'Reding',
+    'Wriing',
+    'Sining',
+    'Cookin'
+  ];
   @override
   void initState() {
-    homePageService = HomePageService();
     divisonList = [];
     districtList = [];
     thanaList = [];
@@ -90,6 +82,7 @@ class _HomepageState extends State<Homepage> {
       MarraigeType(name: 'বিপত্নীক', id: 107)
     ];
     getDistricNames();
+
     super.initState();
   }
 
@@ -149,196 +142,40 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     pageSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          // const SizedBox(
-          //   height: 5,
-          // ),
-          // filterWidget(),
-          OtherUtils.width5,
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              children: [
-                contentWidget(context),
-                contentWidget(context),
-              ],
-            ),
-          )),
-        ],
-      ),
-    );
-  }
-
-  Padding contentWidget(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-      child: Container(
-        // height: 450,
-        // width: pageSize!.width * 0.8,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5)),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () => setState(() {
-                  img = 'fav';
-                }),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Image.asset('assets/images/$img.png',
-                      height: 25, width: 25, color: ColorCodes.primaryPink),
-                ),
-              ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: CircleAvatar(
-                    maxRadius: 50,
-                    backgroundColor: ColorCodes.primaryPurple.withOpacity(0.1),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: Center(
-                        child: Image.asset('assets/images/muslim.png',
-                            color: ColorCodes.purpleBlue),
-                      ),
-                    ),
-                  ),
-                ),
-                Text(
-                  'MAF102',
-                  style: GoogleFonts.anekBangla(
-                      fontSize: 25,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'শখ ও আগ্রহ',
-                  style: GoogleFonts.anekBangla(
-                      fontSize: 14,
-                      color: ColorCodes.deepGrey,
-                      fontWeight: FontWeight.w500),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                      children: hobbiList
-                          .map((e) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Chip(
-                                    backgroundColor: ColorCodes.primaryPurple
-                                        .withOpacity(0.1),
-                                    label: Text(
-                                      e,
-                                      style: GoogleFonts.anekBangla(
-                                          fontSize: 12,
-                                          color: ColorCodes.deepGrey,
-                                          fontWeight: FontWeight.w500),
-                                    )),
-                              ))
-                          .toList()),
-                ),
-                const Divider(
-                  thickness: 1,
-                ),
-                Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                  border: TableBorder(
-                      horizontalInside: BorderSide(
-                          width: 0.8,
-                          color: Colors.grey.shade100,
-                          style: BorderStyle.solid)),
-                  children: [
-                    // _tableRow('জন্ম সাল', '1996'),
-                    _tableRow('বৈবাহিক অবস্থা', 'অবিবাহিত'),
-                    _tableRow('জেলা', 'পাবনা'),
-                    _tableRow('পেশা', 'প্রকৌশলী')
-                  ],
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: SubmitButton(
-                      elevation: 0,
-                      borderColor: Colors.transparent,
-                      gradColor1: ColorCodes.softGreen.withOpacity(0.5),
-                      gradColor2: ColorCodes.softGreen.withOpacity(0.5),
-                      borderWidth: 0,
-                      text: "বিস্তারিত দেখুন",
-                      buttonRadius: 8,
-                      height: 30,
-                      width: double.infinity,
-                      fontWeight: FontWeight.w500,
-                      textColor: ColorCodes.deepGrey,
-                      textSize: 14,
-                      press: (() async {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          ShortListDetailsPage.routeName,
-                          (route) => true,
-                        );
-                        String? nowDate;
-                        await DateFormation()
-                            .dateFormat(context, date.toString())
-                            .then((value) => nowDate = value.toString());
-                        Map<String, dynamic> data = {
-                          "VIEWER_ID": "3128",
-                          "BIODATA_NO": "97",
-                          "VIEWED_USER_ID": "312",
-                          "VIEW_DATE":
-                              "${nowDate}T${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}Z",
-                        };
-
-                        homePageService.bioataViewService(data);
-                        // var content = Row(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-                        //     Text(
-                        //       'আপনার অ্যাকাউন্ট নেই অথবা ',
-                        //       style: GoogleFonts.anekBangla(
-                        //           fontSize: 14,
-                        //           color: Colors.white,
-                        //           fontWeight: FontWeight.w500),
-                        //     ),
-                        //     Text(
-                        //       ' লগইন করুন',
-                        //       style: GoogleFonts.anekBangla(
-                        //           fontSize: 14,
-                        //           color: Colors.white,
-                        //           fontWeight: FontWeight.bold,
-                        //           decoration: TextDecoration.underline,
-                        //           decorationColor:
-                        //               ColorCodes.seconderyStrongPink,
-                        //           decorationThickness: 2),
-                        //     ),
-                        //   ],
-                        // );
-                        // CustomSnackBars().snackBarWithContent(
-                        //     context, ColorCodes.deepGreen, content);
-                      })),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'বায়োডাটা অনুসন্ধান করুন',
+          style: GoogleFonts.anekBangla(fontSize: 20, color: Colors.black),
         ),
+        centerTitle: true,
       ),
+      body: Container(
+        color: Colors.white,
+        child: SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  "আপনার প্রয়োজন অনুযায়ী বায়োডাটা ফিল্টার করুন",
+                  style: GoogleFonts.anekBangla(
+                      fontWeight: FontWeight.w500,
+                      color: ColorCodes.deepGrey,
+                      fontSize: 14,
+                      decoration: TextDecoration.none),
+                ),
+              )
+            ],
+          ),
+        )),
+      ),
+      floatingActionButton: filterWidget(),
     );
   }
 
@@ -362,15 +199,8 @@ class _HomepageState extends State<Homepage> {
           Container(
             decoration: BoxDecoration(
                 color: ColorCodes.deepGrey.withOpacity(0.05),
-                // gradient: LinearGradient(
-                //   begin: Alignment.centerLeft,
-                //   end: Alignment.centerRight,
-                //   colors: [
-                //     ColorCodes.purpleBlue.withOpacity(0.8),
-                //     ColorCodes.purpleBlue,
-                //   ],
-                //   stops: const [0.5, 1.0],
-                // ),
+                border: Border.all(
+                    color: ColorCodes.deepGrey.withOpacity(0.5), width: 0.5),
                 borderRadius: BorderRadius.circular(5)),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -384,7 +214,8 @@ class _HomepageState extends State<Homepage> {
                     "ফিল্টার",
                     style: GoogleFonts.anekBangla(
                         fontWeight: FontWeight.w500,
-                        color: ColorCodes.deepGrey),
+                        color: ColorCodes.deepGrey,
+                        decoration: TextDecoration.none),
                   )
                 ],
               ),
@@ -742,270 +573,100 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  Container biodataTypeDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('বায়োডাটার ধরন',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedBiodataType,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedBiodataType = newValue.toString();
-              });
-            },
-            items: biodataType.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: Text(
-                  e.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+  biodataTypeDropDown(BuildContext context, StateSetter setState) {
+    return CustomDropDownBtn(
+        selectedID: _selectedBiodataType,
+        onChanged: (value) {
+          setState(() {
+            _selectedBiodataType = value.toString();
+          });
+        },
+        onTap: () {},
+        hint: 'বায়োডাটার ধরন',
+        items: biodataType);
   }
 
-  Container marraigeTypeDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('বৈবাহিক অবস্থা',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedMarraigeType,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedMarraigeType = newValue.toString();
-              });
-            },
-            items: marraigeTypesList.map((e) {
-              return DropdownMenuItem(
-                value: e.name,
-                onTap: () => setState((() => _selectedMarraigeTypeID = e.id)),
-                child: Text(
-                  e.name.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+  marraigeTypeDropDown(BuildContext context, StateSetter setState) {
+    List<String> list = [];
+    for (var element in marraigeTypesList) {
+      setState((() => list.add(element.name!)));
+    }
+    return CustomDropDownBtn(
+        selectedID: _selectedMarraigeType,
+        onChanged: (value) {
+          setState(() {
+            _selectedMarraigeType = value.toString();
+          });
+        },
+        onTap: () {},
+        hint: 'বৈবাহিক অবস্থা',
+        items: list);
   }
 
-  Container countryDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('দেশ',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedCountry,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedCountry = newValue.toString();
-              });
-            },
-            items: countryList.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: Text(
-                  e.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+  countryDropDown(BuildContext context, StateSetter setState) {
+    return CustomDropDownBtn(
+        selectedID: _selectedCountry,
+        onChanged: (value) {
+          setState(() {
+            _selectedCountry = value.toString();
+          });
+        },
+        onTap: () {},
+        hint: 'দেশ',
+        items: countryList);
   }
 
-  Container divisionTypeDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('বিভাগ',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedDivision,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedDivision = newValue.toString();
+  divisionTypeDropDown(BuildContext context, StateSetter setState) {
+    return CustomDropDownBtn(
+        selectedID: _selectedDivision,
+        onChanged: (value) {
+          setState(() {
+            _selectedDivision = value.toString();
 
-                _selectedDivision == 'সকল' ? null : setDistrictAsDivision();
-                if (_selectedDivision == 'সকল') {
-                  districtList.clear();
-                  thanaList.clear();
-                  _selectedDistrict = null;
-                  _selectedThana = null;
-                }
-              });
-            },
-            items: divisonList.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: Text(
-                  e.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+            _selectedDivision == 'সকল' ? null : setDistrictAsDivision();
+            if (_selectedDivision == 'সকল') {
+              districtList.clear();
+              thanaList.clear();
+              _selectedDistrict = null;
+              _selectedThana = null;
+            }
+          });
+        },
+        onTap: () {},
+        hint: 'বিভাগ',
+        items: divisonList);
   }
 
-  Container districtTypeDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 2),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('জেলা',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedDistrict,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedDistrict = newValue.toString();
-                _selectedDistrict == 'সকল'
-                    ? null
-                    : setThanaAsDivisionNDistrict();
+  districtTypeDropDown(BuildContext context, StateSetter setState) {
+    return CustomDropDownBtn(
+        selectedID: _selectedDistrict,
+        onChanged: (value) {
+          setState(() {
+            _selectedDistrict = value.toString();
+            _selectedDistrict == 'সকল' ? null : setThanaAsDivisionNDistrict();
 
-                if (_selectedDistrict == 'সকল') {
-                  thanaList.clear();
-                  _selectedThana = null;
-                }
-              });
-            },
-            items: districtList.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: Text(
-                  e.toString(),
-                  style: GoogleFonts.anekBangla(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: ColorCodes.deepGrey),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+            if (_selectedDistrict == 'সকল') {
+              thanaList.clear();
+              _selectedThana = null;
+            }
+          });
+        },
+        onTap: () {},
+        hint: 'জেলা',
+        items: districtList);
   }
 
-  Container thanaTypeDropDown(BuildContext context, StateSetter setState) {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: ColorCodes.deepGrey.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 2),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(10),
-            hint: Text('থানা',
-                style: GoogleFonts.anekBangla(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: ColorCodes.deepGrey)), // Not necessary for Option 1
-            value: _selectedThana,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedThana = newValue.toString();
-              });
-            },
-            items: thanaList.map((e) {
-              return DropdownMenuItem(
-                value: e,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 2),
-                  child: Text(
-                    e.toString(),
-                    style: GoogleFonts.anekBangla(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: ColorCodes.deepGrey),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ),
-    );
+  thanaTypeDropDown(BuildContext context, StateSetter setState) {
+    return CustomDropDownBtn(
+        selectedID: _selectedThana,
+        onChanged: (value) {
+          setState(() {
+            _selectedThana = value.toString();
+          });
+        },
+        onTap: () {},
+        hint: 'থানা',
+        items: thanaList);
   }
 
   Padding searchFieldWidget() {
@@ -1051,22 +712,5 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
     ]);
-  }
-
-  clearAll(BuildContext context) {
-    setState(() {
-      districtList.clear();
-      thanaList.clear();
-      selectedHobby!.clear();
-      selectedOccopationList.clear();
-      _selectedMarraigeType = null;
-      _selectedBiodataType = null;
-      _selectedDivision = null;
-      _selectedDistrict = null;
-      _selectedThana = null;
-      _selectedCountry = null;
-      _valuesAge = const SfRangeValues(20.0, 30.0);
-      _valuesHeight = const SfRangeValues(4.0, 8.0);
-    });
   }
 }
