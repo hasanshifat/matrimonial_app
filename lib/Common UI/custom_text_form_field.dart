@@ -26,27 +26,37 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      maxLength: maxLength,
-      decoration: InputDecoration(
-          suffixIcon: isSuffixActive ? suffix : const SizedBox(),
-          hintText: hintText,
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: Colors.black38,
-              )),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
-                color: Colors.black38,
-              ))),
-      validator: validator,
-      maxLines: maxLines,
+    return SizedBox(
+      height: 65,
+      child: Center(
+        child: TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          textInputAction: textInputAction,
+          maxLength: maxLength,
+          textAlign: TextAlign.left,
+          textAlignVertical: TextAlignVertical.center,
+          decoration: InputDecoration(
+              suffixIcon: isSuffixActive ? suffix : const SizedBox(),
+              hintText: hintText,
+              isDense: true,
+              isCollapsed: false,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: Colors.black38,
+                  )),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: Colors.black38,
+                  ))),
+          validator: validator,
+          maxLines: maxLines,
+        ),
+      ),
     );
   }
 }

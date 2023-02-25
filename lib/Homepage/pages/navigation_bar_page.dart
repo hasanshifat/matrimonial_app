@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../BioData/Pages/bio_data_page.dart';
 import '../../Biodata Request/Pages/biodata_request_page.dart';
 import '../../Biodata Request/Provider/pending_request_prv.dart';
+import '../../Profile/Pages/profile_page.dart';
 import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
 
@@ -181,7 +182,7 @@ class _NavBarPageState extends State<NavBarPage> {
               //? Profile
               GestureDetector(
                 onTap: () => setState(() {
-                  body = const ShortListPage();
+                  body = const ProfilePage();
                   isHomeActive = false;
                   isBiodataActive = false;
                   isFavActive = false;
