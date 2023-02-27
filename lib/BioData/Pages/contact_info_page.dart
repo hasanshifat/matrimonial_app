@@ -33,6 +33,16 @@ class _ContactInfoPageState extends State<ContactInfoPage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    gurdianName.dispose();
+    gurdianMobileNo.dispose();
+    gurdianEmail.dispose();
+    relationWithGurdian.dispose();
+
+    super.dispose();
+  }
+
   saveInfo(BuildContext context) async {
     BuildContext? dcontext;
     setState(() {
