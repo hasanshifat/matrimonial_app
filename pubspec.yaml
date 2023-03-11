@@ -35,11 +35,13 @@ dependencies:
   firebase_core: ^2.4.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
   get: ^4.6.5
   google_fonts: ^4.0.1
   hive: null
   hive_flutter: null
   http: ^0.13.5
+  image_compare: ^1.1.2
   intl: null
   lottie: ^2.2.0
   provider: ^6.0.5
@@ -65,6 +67,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
+    - .env
     - assets/images/
     - assets/lottie/
     - assets/district json/
