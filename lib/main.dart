@@ -99,8 +99,7 @@ class _MyAppState extends State<MyApp> {
                       statusBarIconBrightness: Brightness.dark,
                       statusBarBrightness: Brightness.dark))),
           onGenerateRoute: (settings) => generateRoute(settings),
-          home: const LoginPage()
-          //value.uList.isNotEmpty ? const NavBarPage() : const LoginPage()
+          home: value.uList.isNotEmpty ? const NavBarPage() : const LoginPage()
           //  Provider.of<UserProvider>(context, listen: false).user.token == null
           //     ? const LoginPage()
           //     : const RegistrationPage(),
