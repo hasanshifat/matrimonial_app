@@ -67,31 +67,43 @@ class _BioDataRequestPageState extends State<BioDataRequestPage> {
                     color: ColorCodes.primaryPink,
                   ),
                 )
-              : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: value.pendingList
-                              .map((e) => contentWidget(
-                                  e, value.pendingList.indexOf(e)))
-                              .toList(),
+              : value.pendingList.isEmpty
+                  ? Center(
+                      child: Text(
+                        "কোন তথ্য পাওয়া যায়নি!",
+                        style: GoogleFonts.anekBangla(
+                            fontWeight: FontWeight.w500,
+                            color: ColorCodes.deepGrey,
+                            fontSize: 14,
+                            decoration: TextDecoration.none),
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: value.pendingList
+                                  .map((e) => contentWidget(
+                                      e, value.pendingList.indexOf(e)))
+                                  .toList(),
+                            ),
+                            value.isScrolling == true &&
+                                    value.isEndList == false
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: ColorCodes.primaryPink,
+                                    ),
+                                  )
+                                : const SizedBox()
+                          ],
                         ),
-                        value.isScrolling == true && value.isEndList == false
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: ColorCodes.primaryPink,
-                                ),
-                              )
-                            : const SizedBox()
-                      ],
-                    ),
-                  ),
-                ));
+                      ),
+                    ));
     });
   }
 
@@ -100,7 +112,11 @@ class _BioDataRequestPageState extends State<BioDataRequestPage> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
         onTap: () async {
-          Navigator.push(context, MaterialPageRoute(builder: ((context) => BioDataRequestDetailsPage(p: p, listIndex: i))));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: ((context) =>
+                      BioDataRequestDetailsPage(p: p, listIndex: i))));
 
           // Navigator.pushNamedAndRemoveUntil(
           //   context,
