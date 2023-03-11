@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matrimonial_app/Homepage/pages/navigation_bar_page.dart';
 import 'package:matrimonial_app/Homepage/pages/search_page.dart';
 import 'package:matrimonial_app/Login/Pages/login_page.dart';
 import '../BioData/Pages/bio_data_page.dart';
@@ -53,10 +54,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
           listIndex: listIndex,
         ),
       );
-      case SearchingPage.routeName:
+    case SearchingPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SearchingPage(),
+      );
+    case NavBarPage.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const NavBarPage(),
       );
     // case AddressScreen.routeName:
     //   var totalAmount = routeSettings.arguments as String;

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,16 +8,20 @@ import 'package:matrimonial_app/BioData/Pages/bio_data_page.dart';
 import 'package:matrimonial_app/Homepage/pages/homepage.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:matrimonial_app/Homepage/pages/search_page.dart';
+import 'package:matrimonial_app/Login/Model/user_model.dart';
 import 'package:matrimonial_app/Utils/other_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../BioData/Pages/bio_data_page.dart';
 import '../../Biodata Request/Pages/biodata_request_page.dart';
 import '../../Biodata Request/Provider/pending_request_prv.dart';
+import '../../Login/Provider/user.dart';
 import '../../Profile/Pages/profile_page.dart';
 import '../../Short Listed/Pages/shortlist_page.dart';
 import '../../Utils/color_codes.dart';
 
 class NavBarPage extends StatefulWidget {
+  static const String routeName = '/navBarPage';
   const NavBarPage({super.key});
 
   @override
@@ -30,11 +36,13 @@ class _NavBarPageState extends State<NavBarPage> {
   bool isProfileActive = false;
   var body;
   late PendingBiodataPrv pendingBiodataPrv;
+  
   @override
   void initState() {
+    
     isHomeActive = true;
     pendingBiodataPrv = Provider.of<PendingBiodataPrv>(context, listen: false);
-
+   
     appName();
     body = const Homepage();
     super.initState();
@@ -56,6 +64,8 @@ class _NavBarPageState extends State<NavBarPage> {
 
     return name = 'App Name';
   }
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matrimonial_app/Common%20UI/loading_diaalogs.dart';
 import 'package:matrimonial_app/Common%20UI/submit_button.dart';
+import 'package:matrimonial_app/Login/Provider/user.dart';
 import 'package:matrimonial_app/SignUp/Pages/registration_page.dart';
 import 'package:matrimonial_app/Utils/color_codes.dart';
 import 'package:matrimonial_app/Utils/snackbars.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Common UI/custom_text_form_field.dart';
@@ -323,11 +327,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future login() async {
+    
     CustomLoadingDialogs.circleProgressLoading(context);
-    await loginService.loginService(
+
+    Provider.of<UserProvider>(context, listen: false).setUserFromModel(
         context, _emailController.text, _passwordController.text);
+    // await loginService.loginService(
+    //     context, _emailController.text, _passwordController.text);
 
     // ignore: use_build_context_synchronously
-    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
   }
 }
